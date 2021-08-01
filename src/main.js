@@ -25,7 +25,7 @@ const LIST_COMMENTED = {
   cardsCount: 2,
 };
 
-const renderPlace = {
+const RenderPlace = {
   BEFORE_END: 'beforeend',
   AFTER_END: 'afterend',
   BEFORE_BEGIN: 'beforebegin',
