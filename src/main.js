@@ -25,30 +25,37 @@ const LIST_COMMENTED = {
   cardsCount: 2,
 };
 
+const renderPlace = {
+  BEFORE_END: 'beforeend',
+  AFTER_END: 'afterend',
+  BEFORE_BEGIN: 'beforebegin',
+  AFTER_BEGIN: 'afterbegin',
+};
+
 const main = document.querySelector('.main');
 const header = document.querySelector('.header');
 const footer = document.querySelector('.footer');
 
-const render = (container, element, place) => {
+const render = (container, element, place = renderPlace.BEFORE_END) => {
   container.insertAdjacentHTML(place, element);
 };
 
 // Рендер профиля
-render(header, createProfileTemplate(), 'beforeend');
+render(header, createProfileTemplate());
 
 // Рендер меню, фильтра и основной секции
-render(main, createSiteMenuTemplate(), 'beforeend');
-render(main, createFilterTemplate(), 'beforeend');
-render(main, createMainSectionTemplate(), 'beforeend');
+render(main, createSiteMenuTemplate());
+render(main, createFilterTemplate());
+render(main, createMainSectionTemplate());
 
 // Рендер главного списка
 const filmsSection = document.querySelector('.films');
-render(filmsSection, createListTemplate(LIST_MAIN), 'beforeend');
+render(filmsSection, createListTemplate(LIST_MAIN));
 
 const containerMain = document.querySelector('.films-list__container');
 
 for (let i = 0; i < LIST_MAIN.cardsCount; i++) {
-  render(containerMain, createCardTemplate(), 'beforeend');
+  render(containerMain, createCardTemplate());
 }
 
 render(containerMain, createMoreBtnTemplate(), 'afterend');
