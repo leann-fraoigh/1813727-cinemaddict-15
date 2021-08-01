@@ -7,10 +7,6 @@ import {createCardTemplate} from './view/card.js';
 import {createMoreBtnTemplate} from './view/more-button.js';
 import {createModalTemplate} from './view/modal.js';
 
-const MAIN = document.querySelector('.main');
-const HEADER = document.querySelector('.header');
-const FOOTER = document.querySelector('.footer');
-
 const LIST_MAIN = {
   title: 'All movies. Upcoming',
   headerIsHidden: true,
@@ -29,18 +25,21 @@ const LIST_COMMENTED = {
   cardsCount: 2,
 };
 
-// Функция рендера
+const main = document.querySelector('.main');
+const header = document.querySelector('.header');
+const footer = document.querySelector('.footer');
+
 const render = (container, element, place) => {
   container.insertAdjacentHTML(place, element);
 };
 
 // Рендер профиля
-render(HEADER, createProfileTemplate(), 'beforeend');
+render(header, createProfileTemplate(), 'beforeend');
 
 // Рендер меню, фильтра и основной секции
-render(MAIN, createSiteMenuTemplate(), 'beforeend');
-render(MAIN, createFilterTemplate(), 'beforeend');
-render(MAIN, createMainSectionTemplate(), 'beforeend');
+render(main, createSiteMenuTemplate(), 'beforeend');
+render(main, createFilterTemplate(), 'beforeend');
+render(main, createMainSectionTemplate(), 'beforeend');
 
 // Рендер главного списка
 const filmsSection = document.querySelector('.films');
@@ -73,4 +72,4 @@ for (let i = 0; i < LIST_COMMENTED.cardsCount; i++) {
 }
 
 // Рендер модалки
-render(FOOTER, createModalTemplate(), 'afterend');
+render(footer, createModalTemplate(), 'afterend');
