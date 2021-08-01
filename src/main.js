@@ -36,7 +36,7 @@ const main = document.querySelector('.main');
 const header = document.querySelector('.header');
 const footer = document.querySelector('.footer');
 
-const render = (container, element, place = renderPlace.BEFORE_END) => {
+const render = (container, element, place = RenderPlace.BEFORE_END) => {
   container.insertAdjacentHTML(place, element);
 };
 
