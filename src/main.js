@@ -6,11 +6,13 @@ import {createListTemplate} from './view/list.js';
 import {createCardTemplate} from './view/card.js';
 import {createMoreBtnTemplate} from './view/more-button.js';
 import {createModalTemplate} from './view/modal.js';
+import {generateCard} from './mock/card.js';
 
 const LIST_MAIN = {
   title: 'All movies. Upcoming',
   headerIsHidden: true,
-  cardsCount: 5,
+  cardsCount: 12,
+  cardsCountPerStep: 5,
 };
 
 const LIST_RATED = {
@@ -36,6 +38,8 @@ const main = document.querySelector('.main');
 const header = document.querySelector('.header');
 const footer = document.querySelector('.footer');
 
+const cards = new Array(LIST_MAIN.cardsCount).fill().map(generateCard);
+
 const render = (container, element, place = RenderPlace.BEFORE_END) => {
   container.insertAdjacentHTML(place, element);
 };
@@ -55,7 +59,7 @@ render(filmsSection, createListTemplate(LIST_MAIN));
 const containerMain = document.querySelector('.films-list__container');
 
 for (let i = 0; i < LIST_MAIN.cardsCount; i++) {
-  render(containerMain, createCardTemplate());
+  render(containerMain, createCardTemplate(cards[i]));
 }
 
 render(containerMain, createMoreBtnTemplate(), 'afterend');
@@ -66,7 +70,7 @@ render(filmsSection, createListTemplate(LIST_RATED), 'beforeend');
 const containerSecond = document.querySelector('.films-list:last-of-type .films-list__container');
 
 for (let i = 0; i < LIST_RATED.cardsCount; i++) {
-  render(containerSecond, createCardTemplate(), 'beforeend');
+  render(containerSecond, createCardTemplate(cards[i]), 'beforeend');
 }
 
 // Рендер третьего списка
@@ -75,8 +79,10 @@ render(filmsSection, createListTemplate(LIST_COMMENTED), 'beforeend');
 const containerThird = document.querySelector('.films-list:last-of-type .films-list__container');
 
 for (let i = 0; i < LIST_COMMENTED.cardsCount; i++) {
-  render(containerThird, createCardTemplate(), 'beforeend');
+  render(containerThird, createCardTemplate(cards[i]), 'beforeend');
 }
 
 // Рендер модалки
 render(footer, createModalTemplate(), 'afterend');
+
+console.log(generateCard());
