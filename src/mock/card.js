@@ -15,9 +15,8 @@ const generateRandomList = (range, originalList) => {
   };
 
   const generatedList = new Array(randomNumber).fill().map(pickRandomElement);
-  const generatedString = `${generatedList.join(', ')}.`;
 
-  return generatedString;
+  return generatedList;
 };
 
 const generateTitle = () => {
@@ -38,7 +37,7 @@ const generateAltTitle = () => {
 
   const randomIndex = getRandomInteger(0, 6);
 
-  const altTitle = randomIndex > 2 ? '' : titles.randomIndex;
+  const altTitle = randomIndex > 2 ? '' : titles[randomIndex];
 
   return altTitle;
 };
@@ -69,10 +68,10 @@ const generateRuntime = () => (
 
 const NAMES = ['Robert De Niro', 'Jack Nicholson', 'Denzel Washington', 'Katharine Hepburn', 'Humphrey Bogart', 'Meryl Streep', 'Liv Tyler', 'Jill Scott', 'Bob Saget', 'Arnold Schwarzenegger', 'Kiefer William Rufus Sutherland', 'Kiefer William Sutherland'];
 
-const generatedActors = generateRandomList([1, 6], NAMES);
-const generatedWriters = generateRandomList([1, 3], NAMES);
+const generateActors = () => (generateRandomList([1, 6], NAMES));
+const generateWriters = () => (generateRandomList([1, 3], NAMES));
 
-const generatedGenres = generateRandomList([1, 5], GENRES);
+const generateGenres = () => (generateRandomList([1, 5], GENRES));
 
 const generateDirector = () => (
   NAMES[getRandomInteger(0, NAMES.length - 1)]
@@ -120,14 +119,14 @@ export const generateCard = () => ({
     poster: generatePoster(),
     ageRating: generateAgeRating(),
     director: generateDirector(),
-    writers: generatedWriters,
-    actors: generatedActors,
+    writers: generateWriters(),
+    actors: generateActors(),
     release: {
       date: generateDate(),
       releaseCountry: generateReleaseCountry(),
     },
     runtime: generateRuntime(),
-    genre: generatedGenres,
+    genres: generateGenres(),
     description: generateDescription(),
   },
   userDetails: {

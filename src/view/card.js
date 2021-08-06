@@ -1,7 +1,8 @@
 import dayjs from 'dayjs';
+import {formatRuntime} from '../utils.js';
 
 export const createCardTemplate = (card) => {
-  const {filmInfo: {title, totalRating, poster, genre, description, runtime, release : {date}}, userDetails: {watchlist, alreadyWatched, favorite}} = card;
+  const {filmInfo: {title, totalRating, poster, genres: [genre1], description, runtime, release : {date}}, userDetails: {watchlist, alreadyWatched, favorite}} = card;
 
   const descriptionPreview = description.length < 140 ? description : `${description.substring(0, 139)}...`;
 
@@ -10,7 +11,7 @@ export const createCardTemplate = (card) => {
   const activeBtnClassName = (isActive) => (
     isActive ? 'film-card__controls-item--active' : '');
 
-  const formattedRuntime = runtime < 90 ? `${runtime}min` : `${Math.trunc(runtime/60)}h ${runtime % 60}min`;
+  const formattedRuntime = formatRuntime(runtime);
 
   return `<article class="film-card">
     <h3 class="film-card__title">${title}</h3>
@@ -18,7 +19,7 @@ export const createCardTemplate = (card) => {
     <p class="film-card__info">
       <span class="film-card__year">${releaseDate}</span>
       <span class="film-card__duration">${formattedRuntime}</span>
-      <span class="film-card__genre">${genre}</span>
+      <span class="film-card__genre">${genre1}</span>
     </p>
     <img src="./images/posters/${poster}" alt="" class="film-card__poster">
     <p class="film-card__description">${descriptionPreview}</p>

@@ -83,6 +83,4 @@ for (let i = 0; i < LIST_COMMENTED.cardsCount; i++) {
 }
 
 // Рендер модалки
-render(footer, createModalTemplate(), 'afterend');
-
-console.log(generateCard());
+render(footer, createModalTemplate(cards[0]), 'afterend');
