@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import {formatRuntime} from '../utils.js';
 
 export const createCardTemplate = (card) => {
-  const {filmInfo: {title, totalRating, poster, genres: [genre1], description, runtime, release : {date}}, userDetails: {watchlist, alreadyWatched, favorite}} = card;
+  const {filmInfo: {title, totalRating, poster, genres: [genre1], description, runtime, release : {date}}, userDetails: {watchlist, alreadyWatched, favorite}, comments} = card;
 
   const descriptionPreview = description.length < 140 ? description : `${description.substring(0, 139)}...`;
 
@@ -23,7 +23,7 @@ export const createCardTemplate = (card) => {
     </p>
     <img src="./images/posters/${poster}" alt="" class="film-card__poster">
     <p class="film-card__description">${descriptionPreview}</p>
-    <a class="film-card__comments">5 comments</a>
+    <a class="film-card__comments">${comments.length} comments</a>
     <div class="film-card__controls">
       <button class="film-card__controls-item film-card__controls-item--add-to-watchlist ${activeBtnClassName(watchlist)}" type="button">Add to watchlist</button>
       <button class="film-card__controls-item film-card__controls-item--mark-as-watched ${activeBtnClassName(alreadyWatched)}" type="button">Mark as watched</button>

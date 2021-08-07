@@ -1,8 +1,8 @@
 /* eslint-disable comma-dangle */
 import {getRandomInteger} from '../utils.js';
-import {AGE_RATINGS, GENRES} from '../const.js';
+import {AGE_RATINGS, GENRES, EMOTICONS} from '../const.js';
 
-const generateDate = () => (
+const generateReleaseDate = () => (
   getRandomInteger((Date.parse('14 OCT 1888 GMT')), Date.now())
 );
 
@@ -83,6 +83,10 @@ const generateReleaseCountry = () => (
   COUNTRIES[getRandomInteger(0, COUNTRIES.length - 1)]
 );
 
+const generateEmoticone = () => (
+  EMOTICONS[getRandomInteger(0, EMOTICONS.length - 1)]
+);
+
 const generateRating = () => {
   const randomRating = getRandomInteger(0, 99) / 10;
 
@@ -105,13 +109,25 @@ const generateDescription = () => {
   return description;
 };
 
-// console.log(generateDescription);
+const generateComments = () => {
+  const numberOfComments = getRandomInteger(0, 5);
+  const generateComment = () => (
+    {
+      id: getRandomInteger(0, 1000),
+      author: generateDirector(),
+      comment: generateDescription(),
+      date: generateReleaseDate(),
+      emoticon: generateEmoticone(),
+    }
+  );
+
+  const generatedComments = new Array(numberOfComments).fill().map(generateComment);
+
+  return generatedComments;
+};
 
 export const generateCard = () => ({
-  id: Boolean(getRandomInteger(0, 1000)),
-  comments: [
-    123, 123
-  ],
+  id: getRandomInteger(0, 1000),
   filmInfo: {
     title: generateTitle(),
     alternativeTitle: generateAltTitle(),
@@ -122,7 +138,7 @@ export const generateCard = () => ({
     writers: generateWriters(),
     actors: generateActors(),
     release: {
-      date: generateDate(),
+      date: generateReleaseDate(),
       releaseCountry: generateReleaseCountry(),
     },
     runtime: generateRuntime(),
@@ -132,7 +148,8 @@ export const generateCard = () => ({
   userDetails: {
     watchlist: Boolean(getRandomInteger(0, 1)),
     alreadyWatched: Boolean(getRandomInteger(0, 1)),
-    watchingDate: '2019-04-12T16:12:32.554Z',
+    watchingDate: Date.now(),
     favorite: Boolean(getRandomInteger(0, 1)),
-  }
+  },
+  comments: generateComments(),
 });
