@@ -69,8 +69,10 @@ render(filmsSection, createListTemplate(LIST_RATED), 'beforeend');
 
 const containerSecond = document.querySelector('.films-list:last-of-type .films-list__container');
 
+const cardsSortedByRating = cards.sort((a, b) =>  b.filmInfo.totalRating * 10 - a.filmInfo.totalRating * 10);
+
 for (let i = 0; i < LIST_RATED.cardsCount; i++) {
-  render(containerSecond, createCardTemplate(cards[i]), 'beforeend');
+  render(containerSecond, createCardTemplate(cardsSortedByRating[i]), 'beforeend');
 }
 
 // Рендер третьего списка
@@ -78,8 +80,10 @@ render(filmsSection, createListTemplate(LIST_COMMENTED), 'beforeend');
 
 const containerThird = document.querySelector('.films-list:last-of-type .films-list__container');
 
+const cardsSortedByComments = cards.sort((a, b) =>  b.comments.length - a.comments.length);
+
 for (let i = 0; i < LIST_COMMENTED.cardsCount; i++) {
-  render(containerThird, createCardTemplate(cards[i]), 'beforeend');
+  render(containerThird, createCardTemplate(cardsSortedByComments[i]), 'beforeend');
 }
 
 // Рендер модалки
