@@ -113,7 +113,7 @@ for (let i = 0; i < LIST_COMMENTED.cardsCount; i++) {
 }
 
 // Рендер модалки
-render(footer, createModalTemplate(cards[0]), 'afterend');
+render(footer, createModalTemplate(cards[0]), RenderPlace.AFTER_END);
 
 // Рендер статистики в футере
 render(footer, createFooterStatisticsTemplate(cards));
