@@ -6,6 +6,7 @@ import {createListTemplate} from './view/list.js';
 import {createCardTemplate} from './view/card.js';
 import {createMoreBtnTemplate} from './view/more-button.js';
 import {createModalTemplate} from './view/modal.js';
+import {createFooterStatisticsTemplate} from './view/footer-statistics';
 import {generateCard} from './mock/card.js';
 import {generateFilters} from './mock/filters.js';
 
@@ -47,7 +48,7 @@ const render = (container, element, place = RenderPlace.BEFORE_END) => {
 };
 
 // Рендер профиля
-render(header, createProfileTemplate());
+render(header, createProfileTemplate(cards));
 
 // Рендер меню, фильтра и основной секции
 render(main, createFilterTemplate(filters));
@@ -90,3 +91,6 @@ for (let i = 0; i < LIST_COMMENTED.cardsCount; i++) {
 
 // Рендер модалки
 render(footer, createModalTemplate(cards[0]), 'afterend');
+
+// Рендер статистики в футере
+render(footer, createFooterStatisticsTemplate(cards));

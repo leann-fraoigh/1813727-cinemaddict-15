@@ -28,5 +28,9 @@ const camelCaseToRegular = (string) => (
   /[A-Z]/.test(string) ? (string.replace(/[A-Z]/g, (letter) => ` ${letter.toLowerCase()}`)).slice(0) : string
 );
 
+// Функция, вставляющая пробелы между разрядами в числе
+const numberWithSpaces = (x) => (
+  x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+);
 
-export {getRandomInteger, formatRuntime, joinArray, capitalize, camelCaseToRegular};
+export {getRandomInteger, formatRuntime, joinArray, capitalize, camelCaseToRegular, numberWithSpaces};
