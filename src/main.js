@@ -13,7 +13,7 @@ import {generateFilters} from './mock/filters.js';
 const LIST_MAIN = {
   title: 'All movies. Upcoming',
   headerIsHidden: true,
-  cardsCount: 12,
+  cardsCount: 22,
   cardsCountPerStep: 5,
 };
 
@@ -61,11 +61,34 @@ render(filmsSection, createListTemplate(LIST_MAIN));
 
 const containerMain = document.querySelector('.films-list__container');
 
-for (let i = 0; i < LIST_MAIN.cardsCount; i++) {
+for (let i = 0; i < Math.min(cards.length, LIST_MAIN.cardsCountPerStep); i++) {
   render(containerMain, createCardTemplate(cards[i]));
 }
 
-render(containerMain, createMoreBtnTemplate(), 'afterend');
+// Рендер и задание функциональности кнопки Показать больше
+if (cards.length > LIST_MAIN.cardsCountPerStep) {
+  let renderedTaskCount = LIST_MAIN.cardsCountPerStep;
+
+  render(containerMain, createMoreBtnTemplate(), RenderPlace.AFTER_END);
+
+  const loadMoreButton = filmsSection.querySelector('.films-list__show-more');
+
+  const onLoadMoreBtn = (evt) => {
+    evt.preventDefault();
+    cards
+      .slice(renderedTaskCount, renderedTaskCount + LIST_MAIN.cardsCountPerStep)
+      .forEach((card) => render(containerMain, createCardTemplate(card)));
+
+    renderedTaskCount += LIST_MAIN.cardsCountPerStep;
+
+    if (renderedTaskCount >= cards.length) {
+      loadMoreButton.removeEventListener('click', onLoadMoreBtn);
+      loadMoreButton.remove();
+    }
+  };
+
+  loadMoreButton.addEventListener('click', onLoadMoreBtn);
+}
 
 // Рендер второго списка
 render(filmsSection, createListTemplate(LIST_RATED));
