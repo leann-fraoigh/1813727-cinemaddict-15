@@ -17,4 +17,16 @@ const joinArray = (arr) => (
   `${arr.join(', ')}`
 );
 
-export {getRandomInteger, formatRuntime, joinArray};
+
+// Функция превращения первой буквы строки в заглавную
+const capitalize = (string) => (
+  string.charAt(0).toUpperCase() + string.slice(1)
+);
+
+// Функция превращающая строк в camelCase в обычные
+const camelCaseToRegular = (string) => (
+  /[A-Z]/.test(string) ? (string.replace(/[A-Z]/g, (letter) => ` ${letter.toLowerCase()}`)).slice(0) : string
+);
+
+
+export {getRandomInteger, formatRuntime, joinArray, capitalize, camelCaseToRegular};

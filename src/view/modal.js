@@ -1,22 +1,17 @@
 import dayjs from 'dayjs';
 import {formatRuntime, joinArray} from '../utils.js';
-import {createComnentTemplate} from './comment';
+import {createCommentsTemplate} from './comment';
 
 export const createModalTemplate = (card) => {
   const {filmInfo: {title, alternativeTitle, totalRating, director, writers, actors, poster, genres, description, runtime, release : {date, releaseCountry}}, userDetails: {watchlist, alreadyWatched, favorite}, comments} = card;
 
   const formattedRuntime = formatRuntime(runtime);
-
   const releaseDate = dayjs(date).format('D MMMM YYYY');
-
   const listOfActors = joinArray(actors);
   const listOfWriters = joinArray(writers);
-
   const listOfGenres = genres.map((item) => `<span class="film-details__genre">${item}</span>`).join('');
-
   const activeBtnClassName = (isActive) => ( isActive ? 'film-details__control-button--active' : '');
-
-  const listOfComments = createComnentTemplate(comments);
+  const listOfComments = createCommentsTemplate(comments);
 
   return `<section class="film-details">
     <form class="film-details__inner" action="" method="get">
@@ -88,10 +83,7 @@ export const createModalTemplate = (card) => {
       <div class="film-details__bottom-container">
         <section class="film-details__comments-wrap">
           <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
-          <ul class="film-details__comments-list">
-            ${listOfComments}
-          </ul>
-
+          ${listOfComments}
           <div class="film-details__new-comment">
             <div class="film-details__add-emoji-label"></div>
 

@@ -1,12 +1,13 @@
 import {createProfileTemplate} from './view/profile.js';
-import {createSiteMenuTemplate} from './view/menu.js';
 import {createFilterTemplate} from './view/filter.js';
+import {createSortingTemplate} from './view/sorting.js';
 import {createMainSectionTemplate} from './view/main-section.js';
 import {createListTemplate} from './view/list.js';
 import {createCardTemplate} from './view/card.js';
 import {createMoreBtnTemplate} from './view/more-button.js';
 import {createModalTemplate} from './view/modal.js';
 import {generateCard} from './mock/card.js';
+import {generateFilters} from './mock/filters.js';
 
 const LIST_MAIN = {
   title: 'All movies. Upcoming',
@@ -39,6 +40,7 @@ const header = document.querySelector('.header');
 const footer = document.querySelector('.footer');
 
 const cards = new Array(LIST_MAIN.cardsCount).fill().map(generateCard);
+const filters = generateFilters(cards);
 
 const render = (container, element, place = RenderPlace.BEFORE_END) => {
   container.insertAdjacentHTML(place, element);
@@ -48,8 +50,8 @@ const render = (container, element, place = RenderPlace.BEFORE_END) => {
 render(header, createProfileTemplate());
 
 // Рендер меню, фильтра и основной секции
-render(main, createSiteMenuTemplate());
-render(main, createFilterTemplate());
+render(main, createFilterTemplate(filters));
+render(main, createSortingTemplate());
 render(main, createMainSectionTemplate());
 
 // Рендер главного списка
