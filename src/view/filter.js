@@ -1,10 +1,14 @@
 import {capitalize, camelCaseToRegular} from '../utils.js';
 
-const activeFilterClass = 'main-navigation__item--active';
+const ACTIVE_FILTER_CLASS = 'main-navigation__item--active';
 
 const createFilterItemTemplate = (category, isActive) => {
   const {name, count} = category;
-  return `<a href="#${name}" class="main-navigation__item ${isActive ? activeFilterClass : ''}">${capitalize(camelCaseToRegular(name))} <span class="main-navigation__item-count">${count.length}</span></a>`;
+  return `
+    <a href="#${name}" class="main-navigation__item ${isActive ? ACTIVE_FILTER_CLASS : ''}">
+      ${capitalize(camelCaseToRegular(name))}
+      <span class="main-navigation__item-count">${count.length}</span>
+    </a>`;
 };
 
 export const createFilterTemplate = (categories) => {

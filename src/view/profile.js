@@ -1,4 +1,4 @@
-export const createProfileTemplate = (cards) => {
+const getRatingStatus = (watchedFilms) => {
   const Level = {
     0: '',
     1: 'Novice',
@@ -6,19 +6,20 @@ export const createProfileTemplate = (cards) => {
     3: 'Movie buff',
   };
 
-  const watchedMovies = cards.filter((card) => card.userDetails.alreadyWatched).length;
-
-  let status;
-
-  if (watchedMovies === 0) {
-    status = Level[0];
-  } else if (watchedMovies < 11) {
-    status = Level[1];
-  } else if (watchedMovies < 21) {
-    status = Level[2];
+  if (watchedFilms === 0) {
+    return Level[0];
+  } else if (watchedFilms < 11) {
+    return Level[1];
+  } else if (watchedFilms < 21) {
+    return Level[2];
   } else {
-    status = Level[3];
+    return Level[3];
   }
+};
+
+export const createProfileTemplate = (cards) => {
+  const watchedMovies = cards.filter((card) => card.userDetails.alreadyWatched).length;
+  const status = getRatingStatus(watchedMovies);
 
   return `<section class="header__profile profile">
       ${status ? `<p class="profile__rating">${status}</p>` : ''}

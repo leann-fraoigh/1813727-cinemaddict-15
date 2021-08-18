@@ -7,16 +7,17 @@ const getRandomInteger = (a = 0, b = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
+
+// Функция, возвращающая рандомное булево значение.
+const getRandomBoolean = () => (Boolean(getRandomInteger(0, 1)));
+
 // Функция по переводу минут в формат "часы и минуты".
 const formatRuntime = (runtime) => (
   runtime < 90 ? `${runtime}min` : `${Math.trunc(runtime/60)}h ${runtime % 60}min`
 );
 
 // Функция превращения массива в строку.
-const joinArray = (arr) => (
-  `${arr.join(', ')}`
-);
-
+const joinArray = (arr) => (arr.join(', '));
 
 // Функция превращения первой буквы строки в заглавную
 const capitalize = (string) => (
@@ -33,4 +34,4 @@ const numberWithSpaces = (x) => (
   x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
 );
 
-export {getRandomInteger, formatRuntime, joinArray, capitalize, camelCaseToRegular, numberWithSpaces};
+export {getRandomInteger, formatRuntime, joinArray, capitalize, camelCaseToRegular, numberWithSpaces, getRandomBoolean};

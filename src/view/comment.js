@@ -1,12 +1,10 @@
 import dayjs from 'dayjs';
-// eslint-disable-next-line no-undef
-const relativeTime = require('dayjs/plugin/relativeTime');
+import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 
 const createCommentItemTemplate = (commentItem) => {
   const {author, comment, date, emoticon} = commentItem;
-
-  const formattedDate = Date.now() - date < 172800000 ? dayjs(date).format('YYYY/MM/DD hh:mm') : dayjs(date).fromNow();
+  const formattedDate = dayjs().diff(dayjs(date), 'day') < 2 ? dayjs(date).format('YYYY/MM/DD hh:mm') : dayjs(date).fromNow();
 
   return  `<li class="film-details__comment">
         <span class="film-details__comment-emoji">
@@ -27,11 +25,8 @@ const createCommentsTemplate = (comments) => {
   const sortedComments = comments.sort((a, b) => b.date - a.date);
   const listOfComments = sortedComments
     .map((comment) => createCommentItemTemplate(comment))
-    .join();
+    .join('');
 
-  // for (const item of sortedComments) {
-
-  // }
   return `<ul class="film-details__comments-list">
       ${listOfComments}
     </ul>`;

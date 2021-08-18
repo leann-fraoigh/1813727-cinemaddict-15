@@ -40,7 +40,8 @@ const main = document.querySelector('.main');
 const header = document.querySelector('.header');
 const footer = document.querySelector('.footer');
 
-const cards = new Array(LIST_MAIN.cardsCount).fill().map(generateCard);
+// const cards = new Array(LIST_MAIN.cardsCount).fill().map(generateCard);
+const cards = Array.from({length: LIST_MAIN.cardsCount}, generateCard);
 const filters = generateFilters(cards);
 
 const render = (container, element, place = RenderPlace.BEFORE_END) => {
@@ -95,7 +96,8 @@ render(filmsSection, createListTemplate(LIST_RATED));
 
 const containerSecond = document.querySelector('.films-list:last-of-type .films-list__container');
 
-const cardsSortedByRating = cards.sort((a, b) =>  b.filmInfo.totalRating * 10 - a.filmInfo.totalRating * 10);
+const cardsSortedByRating = cards.sort((a, b) =>  b.filmInfo.totalRating - a.filmInfo.totalRating);
+
 
 for (let i = 0; i < LIST_RATED.cardsCount; i++) {
   render(containerSecond, createCardTemplate(cardsSortedByRating[i]));

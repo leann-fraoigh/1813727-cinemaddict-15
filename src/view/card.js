@@ -2,7 +2,23 @@ import dayjs from 'dayjs';
 import {formatRuntime} from '../utils.js';
 
 export const createCardTemplate = (card) => {
-  const {filmInfo: {title, totalRating, poster, genres: [genre1], description, runtime, release : {date}}, userDetails: {watchlist, alreadyWatched, favorite}, comments} = card;
+  const {
+    filmInfo: {
+      title,
+      totalRating,
+      poster,
+      genres: [mainGenre],
+      description,
+      runtime,
+      release : {date},
+    },
+    userDetails: {
+      watchlist,
+      alreadyWatched,
+      favorite,
+    },
+    comments,
+  } = card;
 
   const descriptionPreview = description.length < 140 ? description : `${description.substring(0, 139)}...`;
 
@@ -19,7 +35,7 @@ export const createCardTemplate = (card) => {
     <p class="film-card__info">
       <span class="film-card__year">${releaseDate}</span>
       <span class="film-card__duration">${formattedRuntime}</span>
-      <span class="film-card__genre">${genre1}</span>
+      <span class="film-card__genre">${mainGenre}</span>
     </p>
     <img src="./images/posters/${poster}" alt="" class="film-card__poster">
     <p class="film-card__description">${descriptionPreview}</p>

@@ -3,14 +3,38 @@ import {formatRuntime, joinArray} from '../utils.js';
 import {createCommentsTemplate} from './comment';
 
 export const createModalTemplate = (card) => {
-  const {filmInfo: {title, alternativeTitle, totalRating, director, writers, actors, poster, genres, description, runtime, release : {date, releaseCountry}}, userDetails: {watchlist, alreadyWatched, favorite}, comments} = card;
+  const {
+    filmInfo: {
+      title,
+      alternativeTitle,
+      totalRating,
+      director,
+      writers,
+      actors,
+      poster,
+      ageRating,
+      genres,
+      description,
+      runtime,
+      release : {
+        date,
+        releaseCountry,
+      },
+    },
+    userDetails: {
+      watchlist,
+      alreadyWatched,
+      favorite,
+    },
+    comments,
+  } = card;
 
   const formattedRuntime = formatRuntime(runtime);
   const releaseDate = dayjs(date).format('D MMMM YYYY');
   const listOfActors = joinArray(actors);
   const listOfWriters = joinArray(writers);
   const listOfGenres = genres.map((item) => `<span class="film-details__genre">${item}</span>`).join('');
-  const activeBtnClassName = (isActive) => ( isActive ? 'film-details__control-button--active' : '');
+  const getActiveBtnClassName = (isActive) => ( isActive ? 'film-details__control-button--active' : '');
   const listOfComments = createCommentsTemplate(comments);
 
   return `<section class="film-details">
@@ -23,7 +47,7 @@ export const createModalTemplate = (card) => {
           <div class="film-details__poster">
             <img class="film-details__poster-img" src="./images/posters/${poster}" alt="">
 
-            <p class="film-details__age">18+</p>
+            <p class="film-details__age">${ageRating}+</p>
           </div>
 
           <div class="film-details__info">
@@ -74,9 +98,9 @@ export const createModalTemplate = (card) => {
         </div>
 
         <section class="film-details__controls">
-          <button type="button" class="film-details__control-button film-details__control-button--watchlist ${activeBtnClassName(watchlist)}" id="watchlist" name="watchlist">Add to watchlist</button>
-          <button type="button" class="film-details__control-button film-details__control-button--watched ${activeBtnClassName(alreadyWatched)}" id="watched" name="watched">Already watched</button>
-          <button type="button" class="film-details__control-button film-details__control-button--favorite ${activeBtnClassName(favorite)}" id="favorite" name="favorite">Add to favorites</button>
+          <button type="button" class="film-details__control-button film-details__control-button--watchlist ${getActiveBtnClassName(watchlist)}" id="watchlist" name="watchlist">Add to watchlist</button>
+          <button type="button" class="film-details__control-button film-details__control-button--watched ${getActiveBtnClassName(alreadyWatched)}" id="watched" name="watched">Already watched</button>
+          <button type="button" class="film-details__control-button film-details__control-button--favorite ${getActiveBtnClassName(favorite)}" id="favorite" name="favorite">Add to favorites</button>
         </section>
       </div>
 
