@@ -1,4 +1,4 @@
-import {capitalize, camelCaseToRegular} from '../utils.js';
+import {capitalize, camelCaseToRegular, createElement} from '../utils.js';
 
 const ACTIVE_FILTER_CLASS = 'main-navigation__item--active';
 
@@ -23,3 +23,26 @@ export const createFilterTemplate = (categories) => {
     <a href="#stats" class="main-navigation__additional">Stats</a>
   </nav>`;
 };
+
+export default class Filter {
+  constructor(filters) {
+    this._element = null;
+    this._filters = filters;
+  }
+
+  getTemplate() {
+    return createFilterTemplate(this._filters);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
