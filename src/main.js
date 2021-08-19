@@ -5,7 +5,7 @@ import MainSectionView from './view/main-section.js';
 import ListView from './view/list.js';
 import {createCardTemplate} from './view/card.js';
 import MoreBtnView from './view/more-button.js';
-import {createModalTemplate} from './view/modal.js';
+import ModalView from './view/modal.js';
 import FooterStatisticsView from './view/footer-statistics';
 import {generateCard} from './mock/card.js';
 import {generateFilters} from './mock/filters.js';
@@ -34,7 +34,6 @@ const main = document.querySelector('.main');
 const header = document.querySelector('.header');
 const footer = document.querySelector('.footer');
 
-// const cards = new Array(LIST_MAIN.cardsCount).fill().map(generateCard);
 const cards = Array.from({length: LIST_MAIN.cardsCount}, generateCard);
 const filters = generateFilters(cards);
 
@@ -106,7 +105,7 @@ for (let i = 0; i < LIST_COMMENTED.cardsCount; i++) {
 }
 
 // Рендер модалки
-renderTemplate(footer, createModalTemplate(cards[0]), RenderPlace.AFTER_END);
+renderElement(footer, new ModalView(cards[0]).getElement(), RenderPlace.AFTER_END);
 
 // Рендер статистики в футере
 renderElement(footer, new FooterStatisticsView(cards).getElement());

@@ -1,8 +1,8 @@
 import dayjs from 'dayjs';
-import {formatRuntime, joinArray} from '../utils.js';
+import {formatRuntime, joinArray, createElement} from '../utils.js';
 import {createCommentsTemplate} from './comment';
 
-export const createModalTemplate = (card) => {
+const createModalTemplate = (card) => {
   const {
     filmInfo: {
       title,
@@ -142,3 +142,27 @@ export const createModalTemplate = (card) => {
     </form>
   </section>`;
 };
+
+
+export default class Modal {
+  constructor(card) {
+    this._element = null;
+    this._card = card;
+  }
+
+  getTemplate() {
+    return createModalTemplate(this._card);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
