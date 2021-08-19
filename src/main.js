@@ -39,12 +39,12 @@ const cards = Array.from({length: LIST_MAIN.cardsCount}, generateCard);
 const filters = generateFilters(cards);
 
 // Рендер профиля
-renderElement(header, new ProfileView(cards).getElement(), RenderPlace.BEFORE_END);
+renderElement(header, new ProfileView(cards).getElement());
 
 // Рендер меню, фильтра и основной секции
-renderElement(main, new FilterView(filters).getElement(), RenderPlace.BEFORE_END);
-renderElement(main, new SortingView().getElement(), RenderPlace.BEFORE_END);
-renderElement(main, new MainSectionView().getElement(), RenderPlace.BEFORE_END);
+renderElement(main, new FilterView(filters).getElement());
+renderElement(main, new SortingView().getElement());
+renderElement(main, new MainSectionView().getElement());
 
 // Рендер главного списка
 const filmsSection = document.querySelector('.films');

@@ -6,7 +6,7 @@ const RenderPlace = {
 };
 
 // Функция, рендерящая элемнт
-const renderElement = (container, element, place) => {
+const renderElement = (container, element, place = RenderPlace.BEFORE_END) => {
   switch (place) {
     case RenderPlace.AFTER_BEGIN:
       container.prepend(element);
