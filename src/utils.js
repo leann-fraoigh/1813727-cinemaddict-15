@@ -66,4 +66,4 @@ const numberWithSpaces = (x) => (
   x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
 );
 
-export {getRandomInteger, formatRuntime, joinArray, capitalize, camelCaseToRegular, numberWithSpaces, getRandomBoolean, renderTemplate, createElement, renderElement};
+export {getRandomInteger, formatRuntime, joinArray, capitalize, camelCaseToRegular, numberWithSpaces, getRandomBoolean, renderTemplate, createElement, renderElement, RenderPlace};

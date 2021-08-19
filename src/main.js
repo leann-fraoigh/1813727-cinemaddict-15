@@ -1,7 +1,7 @@
 import {createProfileTemplate} from './view/profile.js';
 import {createFilterTemplate} from './view/filter.js';
-import {createSortingTemplate} from './view/sorting.js';
-import {createMainSectionTemplate} from './view/main-section.js';
+import SortingView from './view/sorting.js';
+import MainSectionView from './view/main-section.js';
 import {createListTemplate} from './view/list.js';
 import {createCardTemplate} from './view/card.js';
 import {createMoreBtnTemplate} from './view/more-button.js';
@@ -9,14 +9,7 @@ import {createModalTemplate} from './view/modal.js';
 import {createFooterStatisticsTemplate} from './view/footer-statistics';
 import {generateCard} from './mock/card.js';
 import {generateFilters} from './mock/filters.js';
-import {renderTemplate} from './utils.js';
-
-const RenderPlace = {
-  BEFORE_END: 'beforeend',
-  AFTER_END: 'afterend',
-  BEFORE_BEGIN: 'beforebegin',
-  AFTER_BEGIN: 'afterbegin',
-};
+import {renderTemplate, renderElement, RenderPlace} from './utils.js';
 
 const LIST_MAIN = {
   title: 'All movies. Upcoming',
@@ -50,8 +43,9 @@ renderTemplate(header, createProfileTemplate(cards));
 
 // Рендер меню, фильтра и основной секции
 renderTemplate(main, createFilterTemplate(filters));
-renderTemplate(main, createSortingTemplate());
-renderTemplate(main, createMainSectionTemplate());
+renderElement(main, new SortingView().getElement(), RenderPlace.BEFORE_END);
+// renderTemplate(main, createMainSectionTemplate());
+renderElement(main, new MainSectionView().getElement(), RenderPlace.BEFORE_END);
 
 // Рендер главного списка
 const filmsSection = document.querySelector('.films');
