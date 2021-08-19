@@ -37,6 +37,13 @@ const footer = document.querySelector('.footer');
 const cards = Array.from({length: LIST_MAIN.cardsCount}, generateCard);
 const filters = generateFilters(cards);
 
+// Функция рендера карточки
+const renderCard = (cardsList, card) => {
+  const cardComponent = new CardView(card);
+
+  render(cardsList, cardComponent.getElement());
+};
+
 // Рендер профиля
 render(header, new ProfileView(cards).getElement());
 
@@ -52,7 +59,7 @@ render(filmsSection, new ListView(LIST_MAIN).getElement());
 const containerMain = document.querySelector('.films-list__container');
 
 for (let i = 0; i < Math.min(cards.length, LIST_MAIN.cardsCountPerStep); i++) {
-  render(containerMain, new CardView(cards[i]).getElement());
+  renderCard(containerMain, cards[i]);
 }
 
 // Рендер и задание функциональности кнопки Показать больше
@@ -67,7 +74,7 @@ if (cards.length > LIST_MAIN.cardsCountPerStep) {
     evt.preventDefault();
     cards
       .slice(renderedTaskCount, renderedTaskCount + LIST_MAIN.cardsCountPerStep)
-      .forEach((card) => render(containerMain, new CardView(card).getElement()));
+      .forEach((card) => renderCard(containerMain, card));
 
     renderedTaskCount += LIST_MAIN.cardsCountPerStep;
 
@@ -89,7 +96,7 @@ const cardsSortedByRating = cards.sort((a, b) =>  b.filmInfo.totalRating - a.fil
 
 
 for (let i = 0; i < LIST_RATED.cardsCount; i++) {
-  render(containerSecond, new CardView(cardsSortedByRating[i]).getElement());
+  renderCard(containerSecond, cardsSortedByRating[i]);
 }
 
 // Рендер третьего списка
@@ -101,7 +108,7 @@ const containerThird = document.querySelector('.films-list:last-of-type .films-l
 const cardsSortedByComments = cards.sort((a, b) =>  b.comments.length - a.comments.length);
 
 for (let i = 0; i < LIST_COMMENTED.cardsCount; i++) {
-  render(containerThird, new CardView(cardsSortedByComments[i]).getElement());
+  renderCard(containerThird, cardsSortedByComments[i]);
 }
 
 // Рендер модалки
