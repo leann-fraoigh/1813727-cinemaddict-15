@@ -1,3 +1,6 @@
+
+import {createElement} from '../utils.js';
+
 const getRatingStatus = (watchedFilms) => {
   const Level = {
     0: '',
@@ -17,7 +20,7 @@ const getRatingStatus = (watchedFilms) => {
   }
 };
 
-export const createProfileTemplate = (cards) => {
+const createProfileTemplate = (cards) => {
   const watchedMovies = cards.filter((card) => card.userDetails.alreadyWatched).length;
   const status = getRatingStatus(watchedMovies);
 
@@ -26,3 +29,26 @@ export const createProfileTemplate = (cards) => {
       <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
     </section>`;
 };
+
+export default class Profile {
+  constructor(cards) {
+    this._cards = cards;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createProfileTemplate(this._cards);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

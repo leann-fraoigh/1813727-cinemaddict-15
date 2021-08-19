@@ -1,4 +1,4 @@
-import {createProfileTemplate} from './view/profile.js';
+import ProfileView from './view/profile.js';
 import {createFilterTemplate} from './view/filter.js';
 import SortingView from './view/sorting.js';
 import MainSectionView from './view/main-section.js';
@@ -39,12 +39,11 @@ const cards = Array.from({length: LIST_MAIN.cardsCount}, generateCard);
 const filters = generateFilters(cards);
 
 // Рендер профиля
-renderTemplate(header, createProfileTemplate(cards));
+renderElement(header, new ProfileView(cards).getElement(), RenderPlace.BEFORE_END);
 
 // Рендер меню, фильтра и основной секции
 renderTemplate(main, createFilterTemplate(filters));
 renderElement(main, new SortingView().getElement(), RenderPlace.BEFORE_END);
-// renderTemplate(main, createMainSectionTemplate());
 renderElement(main, new MainSectionView().getElement(), RenderPlace.BEFORE_END);
 
 // Рендер главного списка
