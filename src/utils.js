@@ -14,6 +14,12 @@ const renderElement = (container, element, place = RenderPlace.BEFORE_END) => {
     case RenderPlace.BEFORE_END:
       container.append(element);
       break;
+    case RenderPlace.BEFORE_BEGIN:
+      container.before(element);
+      break;
+    case RenderPlace.AFTER_END:
+      container.after(element);
+      break;
   }
 };
 

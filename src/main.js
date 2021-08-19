@@ -4,7 +4,7 @@ import SortingView from './view/sorting.js';
 import MainSectionView from './view/main-section.js';
 import ListView from './view/list.js';
 import {createCardTemplate} from './view/card.js';
-import {createMoreBtnTemplate} from './view/more-button.js';
+import MoreBtnView from './view/more-button.js';
 import {createModalTemplate} from './view/modal.js';
 import FooterStatisticsView from './view/footer-statistics';
 import {generateCard} from './mock/card.js';
@@ -60,7 +60,7 @@ for (let i = 0; i < Math.min(cards.length, LIST_MAIN.cardsCountPerStep); i++) {
 if (cards.length > LIST_MAIN.cardsCountPerStep) {
   let renderedTaskCount = LIST_MAIN.cardsCountPerStep;
 
-  renderTemplate(containerMain, createMoreBtnTemplate(), RenderPlace.AFTER_END);
+  renderElement(containerMain, new MoreBtnView().getElement(), RenderPlace.AFTER_END);
 
   const loadMoreButton = filmsSection.querySelector('.films-list__show-more');
 
