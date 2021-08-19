@@ -1,3 +1,35 @@
+const RenderPlace = {
+  BEFORE_END: 'beforeend',
+  AFTER_END: 'afterend',
+  BEFORE_BEGIN: 'beforebegin',
+  AFTER_BEGIN: 'afterbegin',
+};
+
+// Функция, рендерящая элемнт
+const renderElement = (container, element, place) => {
+  switch (place) {
+    case RenderPlace.AFTER_BEGIN:
+      container.prepend(element);
+      break;
+    case RenderPlace.BEFORE_END:
+      container.append(element);
+      break;
+  }
+};
+
+// Функция, рендерящая шаблон.
+const renderTemplate = (container, element, place = RenderPlace.BEFORE_END) => {
+  container.insertAdjacentHTML(place, element);
+};
+
+// Функция, создающая элемент.
+const createElement = (template) => {
+  const newElement = document.createElement('div');
+  newElement.innerHTML = template;
+
+  return newElement.firstChild;
+};
+
 // Функция из интернета по генерации случайного числа из диапазона
 // Источник - https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_random
 const getRandomInteger = (a = 0, b = 1) => {
@@ -34,4 +66,4 @@ const numberWithSpaces = (x) => (
   x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
 );
 
-export {getRandomInteger, formatRuntime, joinArray, capitalize, camelCaseToRegular, numberWithSpaces, getRandomBoolean};
+export {getRandomInteger, formatRuntime, joinArray, capitalize, camelCaseToRegular, numberWithSpaces, getRandomBoolean, renderTemplate, createElement, renderElement};
