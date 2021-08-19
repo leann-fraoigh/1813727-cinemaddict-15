@@ -2,7 +2,7 @@ import ProfileView from './view/profile.js';
 import FilterView from './view/filter.js';
 import SortingView from './view/sorting.js';
 import MainSectionView from './view/main-section.js';
-import {createListTemplate} from './view/list.js';
+import ListView from './view/list.js';
 import {createCardTemplate} from './view/card.js';
 import {createMoreBtnTemplate} from './view/more-button.js';
 import {createModalTemplate} from './view/modal.js';
@@ -48,7 +48,7 @@ renderElement(main, new MainSectionView().getElement());
 
 // Рендер главного списка
 const filmsSection = document.querySelector('.films');
-renderTemplate(filmsSection, createListTemplate(LIST_MAIN));
+renderElement(filmsSection, new ListView(LIST_MAIN).getElement());
 
 const containerMain = document.querySelector('.films-list__container');
 
@@ -82,7 +82,7 @@ if (cards.length > LIST_MAIN.cardsCountPerStep) {
 }
 
 // Рендер второго списка
-renderTemplate(filmsSection, createListTemplate(LIST_RATED));
+renderElement(filmsSection, new ListView(LIST_RATED).getElement());
 
 const containerSecond = document.querySelector('.films-list:last-of-type .films-list__container');
 
@@ -94,7 +94,8 @@ for (let i = 0; i < LIST_RATED.cardsCount; i++) {
 }
 
 // Рендер третьего списка
-renderTemplate(filmsSection, createListTemplate(LIST_COMMENTED));
+renderElement(filmsSection, new ListView(LIST_COMMENTED).getElement());
+
 
 const containerThird = document.querySelector('.films-list:last-of-type .films-list__container');
 
