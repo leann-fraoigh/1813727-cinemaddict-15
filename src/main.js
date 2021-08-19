@@ -9,7 +9,7 @@ import ModalView from './view/modal.js';
 import FooterStatisticsView from './view/footer-statistics';
 import {generateCard} from './mock/card.js';
 import {generateFilters} from './mock/filters.js';
-import {renderTemplate, renderElement, RenderPlace} from './utils.js';
+import {render, RenderPlace} from './utils.js';
 
 const LIST_MAIN = {
   title: 'All movies. Upcoming',
@@ -38,28 +38,28 @@ const cards = Array.from({length: LIST_MAIN.cardsCount}, generateCard);
 const filters = generateFilters(cards);
 
 // Рендер профиля
-renderElement(header, new ProfileView(cards).getElement());
+render(header, new ProfileView(cards).getElement());
 
 // Рендер меню, фильтра и основной секции
-renderElement(main, new FilterView(filters).getElement());
-renderElement(main, new SortingView().getElement());
-renderElement(main, new MainSectionView().getElement());
+render(main, new FilterView(filters).getElement());
+render(main, new SortingView().getElement());
+render(main, new MainSectionView().getElement());
 
 // Рендер главного списка
 const filmsSection = document.querySelector('.films');
-renderElement(filmsSection, new ListView(LIST_MAIN).getElement());
+render(filmsSection, new ListView(LIST_MAIN).getElement());
 
 const containerMain = document.querySelector('.films-list__container');
 
 for (let i = 0; i < Math.min(cards.length, LIST_MAIN.cardsCountPerStep); i++) {
-  renderElement(containerMain, new CardView(cards[i]).getElement());
+  render(containerMain, new CardView(cards[i]).getElement());
 }
 
 // Рендер и задание функциональности кнопки Показать больше
 if (cards.length > LIST_MAIN.cardsCountPerStep) {
   let renderedTaskCount = LIST_MAIN.cardsCountPerStep;
 
-  renderElement(containerMain, new MoreBtnView().getElement(), RenderPlace.AFTER_END);
+  render(containerMain, new MoreBtnView().getElement(), RenderPlace.AFTER_END);
 
   const loadMoreButton = filmsSection.querySelector('.films-list__show-more');
 
@@ -67,7 +67,7 @@ if (cards.length > LIST_MAIN.cardsCountPerStep) {
     evt.preventDefault();
     cards
       .slice(renderedTaskCount, renderedTaskCount + LIST_MAIN.cardsCountPerStep)
-      .forEach((card) => renderElement(containerMain, new CardView(card).getElement()));
+      .forEach((card) => render(containerMain, new CardView(card).getElement()));
 
     renderedTaskCount += LIST_MAIN.cardsCountPerStep;
 
@@ -81,7 +81,7 @@ if (cards.length > LIST_MAIN.cardsCountPerStep) {
 }
 
 // Рендер второго списка
-renderElement(filmsSection, new ListView(LIST_RATED).getElement());
+render(filmsSection, new ListView(LIST_RATED).getElement());
 
 const containerSecond = document.querySelector('.films-list:last-of-type .films-list__container');
 
@@ -89,11 +89,11 @@ const cardsSortedByRating = cards.sort((a, b) =>  b.filmInfo.totalRating - a.fil
 
 
 for (let i = 0; i < LIST_RATED.cardsCount; i++) {
-  renderElement(containerSecond, new CardView(cardsSortedByRating[i]).getElement());
+  render(containerSecond, new CardView(cardsSortedByRating[i]).getElement());
 }
 
 // Рендер третьего списка
-renderElement(filmsSection, new ListView(LIST_COMMENTED).getElement());
+render(filmsSection, new ListView(LIST_COMMENTED).getElement());
 
 
 const containerThird = document.querySelector('.films-list:last-of-type .films-list__container');
@@ -101,12 +101,12 @@ const containerThird = document.querySelector('.films-list:last-of-type .films-l
 const cardsSortedByComments = cards.sort((a, b) =>  b.comments.length - a.comments.length);
 
 for (let i = 0; i < LIST_COMMENTED.cardsCount; i++) {
-  renderElement(containerThird, new CardView(cardsSortedByComments[i]).getElement());
+  render(containerThird, new CardView(cardsSortedByComments[i]).getElement());
 }
 
 // Рендер модалки
-renderElement(footer, new ModalView(cards[0]).getElement(), RenderPlace.AFTER_END);
+render(footer, new ModalView(cards[0]).getElement(), RenderPlace.AFTER_END);
 
 // Рендер статистики в футере
-renderElement(footer, new FooterStatisticsView(cards).getElement());
+render(footer, new FooterStatisticsView(cards).getElement());
 

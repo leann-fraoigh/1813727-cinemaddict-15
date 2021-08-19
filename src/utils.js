@@ -6,7 +6,7 @@ const RenderPlace = {
 };
 
 // Функция, рендерящая элемнт
-const renderElement = (container, element, place = RenderPlace.BEFORE_END) => {
+const render = (container, element, place = RenderPlace.BEFORE_END) => {
   switch (place) {
     case RenderPlace.AFTER_BEGIN:
       container.prepend(element);
@@ -21,11 +21,6 @@ const renderElement = (container, element, place = RenderPlace.BEFORE_END) => {
       container.after(element);
       break;
   }
-};
-
-// Функция, рендерящая шаблон.
-const renderTemplate = (container, element, place = RenderPlace.BEFORE_END) => {
-  container.insertAdjacentHTML(place, element);
 };
 
 // Функция, создающая элемент.
@@ -72,4 +67,4 @@ const numberWithSpaces = (x) => (
   x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
 );
 
-export {getRandomInteger, formatRuntime, joinArray, capitalize, camelCaseToRegular, numberWithSpaces, getRandomBoolean, renderTemplate, createElement, renderElement, RenderPlace};
+export {getRandomInteger, formatRuntime, joinArray, capitalize, camelCaseToRegular, numberWithSpaces, getRandomBoolean, createElement, render, RenderPlace};
