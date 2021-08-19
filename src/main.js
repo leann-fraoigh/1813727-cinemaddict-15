@@ -3,7 +3,7 @@ import FilterView from './view/filter.js';
 import SortingView from './view/sorting.js';
 import MainSectionView from './view/main-section.js';
 import ListView from './view/list.js';
-import {createCardTemplate} from './view/card.js';
+import CardView from './view/card.js';
 import MoreBtnView from './view/more-button.js';
 import ModalView from './view/modal.js';
 import FooterStatisticsView from './view/footer-statistics';
@@ -52,7 +52,7 @@ renderElement(filmsSection, new ListView(LIST_MAIN).getElement());
 const containerMain = document.querySelector('.films-list__container');
 
 for (let i = 0; i < Math.min(cards.length, LIST_MAIN.cardsCountPerStep); i++) {
-  renderTemplate(containerMain, createCardTemplate(cards[i]));
+  renderElement(containerMain, new CardView(cards[i]).getElement());
 }
 
 // Рендер и задание функциональности кнопки Показать больше
@@ -67,7 +67,7 @@ if (cards.length > LIST_MAIN.cardsCountPerStep) {
     evt.preventDefault();
     cards
       .slice(renderedTaskCount, renderedTaskCount + LIST_MAIN.cardsCountPerStep)
-      .forEach((card) => renderTemplate(containerMain, createCardTemplate(card)));
+      .forEach((card) => renderElement(containerMain, new CardView(card).getElement()));
 
     renderedTaskCount += LIST_MAIN.cardsCountPerStep;
 
@@ -89,7 +89,7 @@ const cardsSortedByRating = cards.sort((a, b) =>  b.filmInfo.totalRating - a.fil
 
 
 for (let i = 0; i < LIST_RATED.cardsCount; i++) {
-  renderTemplate(containerSecond, createCardTemplate(cardsSortedByRating[i]));
+  renderElement(containerSecond, new CardView(cardsSortedByRating[i]).getElement());
 }
 
 // Рендер третьего списка
@@ -101,7 +101,7 @@ const containerThird = document.querySelector('.films-list:last-of-type .films-l
 const cardsSortedByComments = cards.sort((a, b) =>  b.comments.length - a.comments.length);
 
 for (let i = 0; i < LIST_COMMENTED.cardsCount; i++) {
-  renderTemplate(containerThird, createCardTemplate(cardsSortedByComments[i]));
+  renderElement(containerThird, new CardView(cardsSortedByComments[i]).getElement());
 }
 
 // Рендер модалки
