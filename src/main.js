@@ -9,7 +9,7 @@ import ModalView from './view/modal.js';
 import FooterStatisticsView from './view/footer-statistics';
 import {generateCard} from './mock/card.js';
 import {generateFilters} from './mock/filters.js';
-import {render, RenderPlace} from './utils.js';
+import {render, RenderPlace, toggleScrollLock} from './utils.js';
 
 const LIST_MAIN = {
   title: 'All movies. Upcoming',
@@ -30,6 +30,7 @@ const LIST_COMMENTED = {
   cardsCount: 2,
 };
 
+const body = document.querySelector('body');
 const main = document.querySelector('.main');
 const header = document.querySelector('.header');
 const footer = document.querySelector('.footer');
@@ -37,9 +38,32 @@ const footer = document.querySelector('.footer');
 const cards = Array.from({length: LIST_MAIN.cardsCount}, generateCard);
 const filters = generateFilters(cards);
 
+// Функция рендера модаки
+const renderModal = (card) => {
+  const modalComponent = new ModalView(card);
+  const modalCloseBtn = modalComponent.getElement().querySelector('.film-details__close-btn');
+
+  modalCloseBtn.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    body.removeChild(modalComponent.getElement());
+    toggleScrollLock();
+  });
+
+  body.appendChild(modalComponent.getElement());
+  toggleScrollLock();
+};
+
 // Функция рендера карточки
 const renderCard = (cardsList, card) => {
   const cardComponent = new CardView(card);
+  const modalTriggers = cardComponent.getElement().querySelectorAll('.film-card__poster, .film-card__title, .film-card__comments');
+
+  modalTriggers.forEach((item) => {
+    item.addEventListener('click', (evt) => {
+      evt.preventDefault();
+      renderModal(card);
+    });
+  });
 
   render(cardsList, cardComponent.getElement());
 };
@@ -110,9 +134,6 @@ const cardsSortedByComments = cards.sort((a, b) =>  b.comments.length - a.commen
 for (let i = 0; i < LIST_COMMENTED.cardsCount; i++) {
   renderCard(containerThird, cardsSortedByComments[i]);
 }
-
-// Рендер модалки
-render(footer, new ModalView(cards[0]).getElement(), RenderPlace.AFTER_END);
 
 // Рендер статистики в футере
 render(footer, new FooterStatisticsView(cards).getElement());

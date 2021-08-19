@@ -67,4 +67,9 @@ const numberWithSpaces = (x) => (
   x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
 );
 
-export {getRandomInteger, formatRuntime, joinArray, capitalize, camelCaseToRegular, numberWithSpaces, getRandomBoolean, createElement, render, RenderPlace};
+// Функция, предотвращающая двойной скролл
+const toggleScrollLock = () => {
+  document.querySelector('body').classList.toggle('hide-overflow');
+};
+
+export {getRandomInteger, formatRuntime, joinArray, capitalize, camelCaseToRegular, numberWithSpaces, getRandomBoolean, createElement, render, RenderPlace, toggleScrollLock};
