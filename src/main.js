@@ -6,7 +6,7 @@ import {createListTemplate} from './view/list.js';
 import {createCardTemplate} from './view/card.js';
 import {createMoreBtnTemplate} from './view/more-button.js';
 import {createModalTemplate} from './view/modal.js';
-import {createFooterStatisticsTemplate} from './view/footer-statistics';
+import FooterStatisticsView from './view/footer-statistics';
 import {generateCard} from './mock/card.js';
 import {generateFilters} from './mock/filters.js';
 import {renderTemplate, renderElement, RenderPlace} from './utils.js';
@@ -108,4 +108,5 @@ for (let i = 0; i < LIST_COMMENTED.cardsCount; i++) {
 renderTemplate(footer, createModalTemplate(cards[0]), RenderPlace.AFTER_END);
 
 // Рендер статистики в футере
-renderTemplate(footer, createFooterStatisticsTemplate(cards));
+renderElement(footer, new FooterStatisticsView(cards).getElement());
+
