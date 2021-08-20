@@ -72,4 +72,12 @@ const toggleScrollLock = () => {
   document.querySelector('body').classList.toggle('hide-overflow');
 };
 
-export {getRandomInteger, formatRuntime, joinArray, capitalize, camelCaseToRegular, numberWithSpaces, getRandomBoolean, createElement, render, RenderPlace, toggleScrollLock};
+// Функция из интернета для получения значений по [сложному] ключу-строке
+// Источник: https://it.knightnet.org.uk/kb/node-js/get-properties/
+const getValue = (obj, prop) => (
+  prop.split('.').reduce((prev, curr) => (
+    prev ? prev[curr] : undefined
+  ), obj || self)
+);
+
+export {getRandomInteger, formatRuntime, joinArray, capitalize, camelCaseToRegular, numberWithSpaces, getRandomBoolean, createElement, render, RenderPlace, toggleScrollLock,getValue};
