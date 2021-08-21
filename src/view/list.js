@@ -29,4 +29,8 @@ export default class List {
   removeElement() {
     this._element = null;
   }
+
+  getContainer() {
+    return this._element.querySelector('.films-list__container');
+  }
 }

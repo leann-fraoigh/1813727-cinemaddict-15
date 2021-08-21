@@ -5,6 +5,11 @@ const RenderPlace = {
   AFTER_BEGIN: 'afterbegin',
 };
 
+const ScrollState = {
+  on: 'on',
+  off: 'off',
+};
+
 // Функция, рендерящая элемнт
 const render = (container, element, place = RenderPlace.BEFORE_END) => {
   switch (place) {
@@ -68,8 +73,15 @@ const numberWithSpaces = (x) => (
 );
 
 // Функция, предотвращающая двойной скролл
-const toggleScrollLock = () => {
-  document.querySelector('body').classList.toggle('hide-overflow');
+const setScrollLockState = (state) => {
+  switch (state) {
+    case ScrollState.on:
+      document.querySelector('body').classList.add('hide-overflow');
+      break;
+    case ScrollState.off:
+      document.querySelector('body').classList.remove('hide-overflow');
+      break;
+  }
 };
 
 // Функция из интернета для получения значений по [сложному] ключу-строке
@@ -80,4 +92,4 @@ const getValue = (obj, prop) => (
   ), obj || self)
 );
 
-export {getRandomInteger, formatRuntime, joinArray, capitalize, camelCaseToRegular, numberWithSpaces, getRandomBoolean, createElement, render, RenderPlace, toggleScrollLock,getValue};
+export {getRandomInteger, formatRuntime, joinArray, capitalize, camelCaseToRegular, numberWithSpaces, getRandomBoolean, createElement, render, RenderPlace, ScrollState, setScrollLockState, getValue};

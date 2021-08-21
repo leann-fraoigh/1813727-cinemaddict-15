@@ -165,4 +165,11 @@ export default class Modal {
   removeElement() {
     this._element = null;
   }
+
+  getCloseButton() {
+    if (!this._element) {
+      return;
+    }
+    return this._element.querySelector('.film-details__close-btn');
+  }
 }

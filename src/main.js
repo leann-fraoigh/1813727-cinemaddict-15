@@ -9,7 +9,7 @@ import ModalView from './view/modal.js';
 import FooterStatisticsView from './view/footer-statistics';
 import {generateCard} from './mock/card.js';
 import {generateFilters} from './mock/filters.js';
-import {render, RenderPlace, toggleScrollLock, getValue} from './utils.js';
+import {render, RenderPlace, ScrollState, setScrollLockState, getValue} from './utils.js';
 
 const List = {
   LIST_MAIN: {
@@ -45,16 +45,16 @@ const filters = generateFilters(cards);
 // Функция рендера модаки
 const renderModal = (card) => {
   const modalComponent = new ModalView(card);
-  const modalCloseBtn = modalComponent.getElement().querySelector('.film-details__close-btn');
 
+  body.appendChild(modalComponent.getElement());
+  setScrollLockState(ScrollState.on);
+
+  const modalCloseBtn = modalComponent.getCloseButton();
   modalCloseBtn.addEventListener('click', (evt) => {
     evt.preventDefault();
     body.removeChild(modalComponent.getElement());
-    toggleScrollLock();
+    setScrollLockState(ScrollState.off);
   });
-
-  body.appendChild(modalComponent.getElement());
-  toggleScrollLock();
 };
 
 // Функция рендера карточки
@@ -75,10 +75,11 @@ const renderCard = (cardsList, card) => {
 // Функция рендера главного списка
 const renderMainList = () => {
   const filmsSection = document.querySelector('.films');
+  const listElement = new ListView(List.LIST_MAIN);
 
-  render(filmsSection, new ListView(List.LIST_MAIN).getElement());
+  render(filmsSection, listElement.getElement());
 
-  const containerMain = document.querySelector('.films-list__container');
+  const containerMain = listElement.getContainer();
 
   for (let i = 0; i < Math.min(cards.length, List.LIST_MAIN.cardsCountPerStep); i++) {
     renderCard(containerMain, cards[i]);
@@ -112,23 +113,16 @@ const renderMainList = () => {
 
 // Функция рендера дополнительного списка
 const renderAdditionalList = (listInfo = List.LIST_RATED) => {
-  const sortCriterion = listInfo.cardsSortingCriterion;
-  const cardsCount = listInfo.cardsCount;
+  const {cardsSortingCriterion: sortCriterion, cardsCount} = listInfo;
   const filmsSection = document.querySelector('.films');
+  const listElement = new ListView(listInfo);
 
-  render(filmsSection, new ListView(listInfo).getElement());
+  render(filmsSection, listElement.getElement());
 
-  const container = document.querySelector('.films-list:last-of-type .films-list__container');
+  const container = listElement.getContainer();
 
-  const cardsSorted = cards.sort((a, b) =>  {
-    if(getValue(a, sortCriterion) < getValue(b, sortCriterion)) {
-      return 1;
-    }
-    if(getValue(a, sortCriterion) > getValue(b, sortCriterion)) {
-      return -1;
-    }
-    return 0;
-  });
+  const cardsSorted = cards.sort((a, b) =>
+    getValue(b, sortCriterion) - getValue(a, sortCriterion));
 
   for (let i = 0; i < cardsCount; i++) {
     renderCard(container, cardsSorted[i]);
