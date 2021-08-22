@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
-import {formatRuntime} from '../utils.js';
+import {formatRuntime, createElement} from '../utils.js';
 
-export const createCardTemplate = (card) => {
+const createCardTemplate = (card) => {
   const {
     filmInfo: {
       title,
@@ -47,3 +47,26 @@ export const createCardTemplate = (card) => {
     </div>
   </article>`;
 };
+
+export default class Card {
+  constructor(card) {
+    this._element = null;
+    this._card = card;
+  }
+
+  getTemplate() {
+    return createCardTemplate(this._card);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

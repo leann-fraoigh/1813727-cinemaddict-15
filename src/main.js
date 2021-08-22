@@ -1,121 +1,151 @@
-import {createProfileTemplate} from './view/profile.js';
-import {createFilterTemplate} from './view/filter.js';
-import {createSortingTemplate} from './view/sorting.js';
-import {createMainSectionTemplate} from './view/main-section.js';
-import {createListTemplate} from './view/list.js';
-import {createCardTemplate} from './view/card.js';
-import {createMoreBtnTemplate} from './view/more-button.js';
-import {createModalTemplate} from './view/modal.js';
-import {createFooterStatisticsTemplate} from './view/footer-statistics';
+import ProfileView from './view/profile.js';
+import FilterView from './view/filter.js';
+import SortingView from './view/sorting.js';
+import MainSectionView from './view/main-section.js';
+import ListView from './view/list.js';
+import CardView from './view/card.js';
+import MoreBtnView from './view/more-button.js';
+import ModalView from './view/modal.js';
+import FooterStatisticsView from './view/footer-statistics';
 import {generateCard} from './mock/card.js';
 import {generateFilters} from './mock/filters.js';
+import {render, RenderPlace, ScrollState, setScrollLockState, getValue} from './utils.js';
 
-const LIST_MAIN = {
-  title: 'All movies. Upcoming',
-  headerIsHidden: true,
-  cardsCount: 22,
-  cardsCountPerStep: 5,
+const List = {
+  LIST_MAIN: {
+    title: 'All movies. Upcoming',
+    headerIsHidden: true,
+    cardsCount: 22,
+    cardsCountPerStep: 5,
+  },
+
+  LIST_RATED: {
+    title: 'Top rated',
+    mod: 'films-list--extra',
+    cardsCount: 2,
+    cardsSortingCriterion: 'filmInfo.totalRating',
+  },
+
+  LIST_COMMENTED: {
+    title: 'Most Commented',
+    mod: 'films-list--extra',
+    cardsCount: 2,
+    cardsSortingCriterion: 'comments.length',
+  },
 };
 
-const LIST_RATED = {
-  title: 'Top rated',
-  mod: 'films-list--extra',
-  cardsCount: 2,
-};
-
-const LIST_COMMENTED = {
-  title: 'Most Commented',
-  mod: 'films-list--extra',
-  cardsCount: 2,
-};
-
-const RenderPlace = {
-  BEFORE_END: 'beforeend',
-  AFTER_END: 'afterend',
-  BEFORE_BEGIN: 'beforebegin',
-  AFTER_BEGIN: 'afterbegin',
-};
-
+const body = document.querySelector('body');
 const main = document.querySelector('.main');
 const header = document.querySelector('.header');
 const footer = document.querySelector('.footer');
 
-// const cards = new Array(LIST_MAIN.cardsCount).fill().map(generateCard);
-const cards = Array.from({length: LIST_MAIN.cardsCount}, generateCard);
+const cards = Array.from({length: List.LIST_MAIN.cardsCount}, generateCard);
 const filters = generateFilters(cards);
 
-const render = (container, element, place = RenderPlace.BEFORE_END) => {
-  container.insertAdjacentHTML(place, element);
+// Функция рендера модаки
+const renderModal = (card) => {
+  const modalComponent = new ModalView(card);
+
+  body.appendChild(modalComponent.getElement());
+  setScrollLockState(ScrollState.on);
+
+  const modalCloseBtn = modalComponent.getCloseButton();
+  modalCloseBtn.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    body.removeChild(modalComponent.getElement());
+    setScrollLockState(ScrollState.off);
+  });
 };
 
+// Функция рендера карточки
+const renderCard = (cardsList, card) => {
+  const cardComponent = new CardView(card);
+  const modalTriggers = cardComponent.getElement().querySelectorAll('.film-card__poster, .film-card__title, .film-card__comments');
+
+  modalTriggers.forEach((item) => {
+    item.addEventListener('click', (evt) => {
+      evt.preventDefault();
+      renderModal(card);
+    });
+  });
+
+  render(cardsList, cardComponent.getElement());
+};
+
+// Функция рендера главного списка
+const renderMainList = () => {
+  const filmsSection = document.querySelector('.films');
+  const listElement = new ListView(List.LIST_MAIN);
+
+  render(filmsSection, listElement.getElement());
+
+  const containerMain = listElement.getContainer();
+
+  for (let i = 0; i < Math.min(cards.length, List.LIST_MAIN.cardsCountPerStep); i++) {
+    renderCard(containerMain, cards[i]);
+  }
+
+  // Рендер и задание функциональности кнопки Показать больше
+  if (cards.length > List.LIST_MAIN.cardsCountPerStep) {
+    let renderedTaskCount = List.LIST_MAIN.cardsCountPerStep;
+
+    render(containerMain, new MoreBtnView().getElement(), RenderPlace.AFTER_END);
+
+    const loadMoreButton = filmsSection.querySelector('.films-list__show-more');
+
+    const onLoadMoreBtn = (evt) => {
+      evt.preventDefault();
+      cards
+        .slice(renderedTaskCount, renderedTaskCount + List.LIST_MAIN.cardsCountPerStep)
+        .forEach((card) => renderCard(containerMain, card));
+
+      renderedTaskCount += List.LIST_MAIN.cardsCountPerStep;
+
+      if (renderedTaskCount >= cards.length) {
+        loadMoreButton.removeEventListener('click', onLoadMoreBtn);
+        loadMoreButton.remove();
+      }
+    };
+
+    loadMoreButton.addEventListener('click', onLoadMoreBtn);
+  }
+};
+
+// Функция рендера дополнительного списка
+const renderAdditionalList = (listInfo = List.LIST_RATED) => {
+  const {cardsSortingCriterion: sortCriterion, cardsCount} = listInfo;
+  const filmsSection = document.querySelector('.films');
+  const listElement = new ListView(listInfo);
+
+  render(filmsSection, listElement.getElement());
+
+  const container = listElement.getContainer();
+
+  const cardsSorted = cards.sort((a, b) =>
+    getValue(b, sortCriterion) - getValue(a, sortCriterion));
+
+  for (let i = 0; i < cardsCount; i++) {
+    renderCard(container, cardsSorted[i]);
+  }
+};
+
+// РЕНДЕР КОМПОНЕНТОВ
+
 // Рендер профиля
-render(header, createProfileTemplate(cards));
+render(header, new ProfileView(cards).getElement());
 
 // Рендер меню, фильтра и основной секции
-render(main, createFilterTemplate(filters));
-render(main, createSortingTemplate());
-render(main, createMainSectionTemplate());
+render(main, new FilterView(filters).getElement());
+render(main, new SortingView().getElement());
+render(main, new MainSectionView().getElement());
 
 // Рендер главного списка
-const filmsSection = document.querySelector('.films');
-render(filmsSection, createListTemplate(LIST_MAIN));
+renderMainList();
 
-const containerMain = document.querySelector('.films-list__container');
-
-for (let i = 0; i < Math.min(cards.length, LIST_MAIN.cardsCountPerStep); i++) {
-  render(containerMain, createCardTemplate(cards[i]));
-}
-
-// Рендер и задание функциональности кнопки Показать больше
-if (cards.length > LIST_MAIN.cardsCountPerStep) {
-  let renderedTaskCount = LIST_MAIN.cardsCountPerStep;
-
-  render(containerMain, createMoreBtnTemplate(), RenderPlace.AFTER_END);
-
-  const loadMoreButton = filmsSection.querySelector('.films-list__show-more');
-
-  const onLoadMoreBtn = (evt) => {
-    evt.preventDefault();
-    cards
-      .slice(renderedTaskCount, renderedTaskCount + LIST_MAIN.cardsCountPerStep)
-      .forEach((card) => render(containerMain, createCardTemplate(card)));
-
-    renderedTaskCount += LIST_MAIN.cardsCountPerStep;
-
-    if (renderedTaskCount >= cards.length) {
-      loadMoreButton.removeEventListener('click', onLoadMoreBtn);
-      loadMoreButton.remove();
-    }
-  };
-
-  loadMoreButton.addEventListener('click', onLoadMoreBtn);
-}
-
-// Рендер второго списка
-render(filmsSection, createListTemplate(LIST_RATED));
-
-const containerSecond = document.querySelector('.films-list:last-of-type .films-list__container');
-
-const cardsSortedByRating = cards.sort((a, b) =>  b.filmInfo.totalRating - a.filmInfo.totalRating);
-
-
-for (let i = 0; i < LIST_RATED.cardsCount; i++) {
-  render(containerSecond, createCardTemplate(cardsSortedByRating[i]));
-}
-
-// Рендер третьего списка
-render(filmsSection, createListTemplate(LIST_COMMENTED));
-
-const containerThird = document.querySelector('.films-list:last-of-type .films-list__container');
-
-const cardsSortedByComments = cards.sort((a, b) =>  b.comments.length - a.comments.length);
-
-for (let i = 0; i < LIST_COMMENTED.cardsCount; i++) {
-  render(containerThird, createCardTemplate(cardsSortedByComments[i]));
-}
-
-// Рендер модалки
-render(footer, createModalTemplate(cards[0]), RenderPlace.AFTER_END);
+// Рендер дополнительных списков
+renderAdditionalList(List.LIST_RATED);
+renderAdditionalList(List.LIST_COMMENTED);
 
 // Рендер статистики в футере
-render(footer, createFooterStatisticsTemplate(cards));
+render(footer, new FooterStatisticsView(cards).getElement());
+
