@@ -9,28 +9,31 @@ import ModalView from './view/modal.js';
 import FooterStatisticsView from './view/footer-statistics';
 import {generateCard} from './mock/card.js';
 import {generateFilters} from './mock/filters.js';
-import {ScrollState, setScrollLockState, getValue} from './utils/common.js';
+import {ScrollState, setScrollLockState} from './utils/common.js';
 import {render, RenderPlace} from './utils/render';
 
 const List = {
   LIST_MAIN: {
+    isMain: true,
     title: 'All movies. Upcoming',
     headerIsHidden: true,
-    cardsCount: 22,
+    cardsToGenerate: 22,
     cardsCountPerStep: 5,
   },
 
   LIST_RATED: {
+    isMain: false,
     title: 'Top rated',
     mod: 'films-list--extra',
-    cardsCount: 2,
+    cardsCountPerStep: 2,
     cardsSortingCriterion: 'filmInfo.totalRating',
   },
 
   LIST_COMMENTED: {
+    isMain: false,
     title: 'Most Commented',
     mod: 'films-list--extra',
-    cardsCount: 2,
+    cardsCountPerStep: 2,
     cardsSortingCriterion: 'comments.length',
   },
 };
@@ -40,7 +43,7 @@ const main = document.querySelector('.main');
 const header = document.querySelector('.header');
 const footer = document.querySelector('.footer');
 
-const cards = Array.from({length: List.LIST_MAIN.cardsCount}, generateCard);
+const cards = Array.from({length: List.LIST_MAIN.cardsToGenerate}, generateCard);
 const filters = generateFilters(cards);
 
 // Функция рендера модаки
@@ -49,13 +52,6 @@ const renderModal = (card) => {
 
   body.appendChild(modalComponent.getElement());
   setScrollLockState(ScrollState.on);
-
-  // const modalCloseBtn = modalComponent.getCloseButton();
-  // modalCloseBtn.addEventListener('click', (evt) => {
-  //   evt.preventDefault();
-  //   body.removeChild(modalComponent.getElement());
-  //   setScrollLockState(ScrollState.off);
-  // });
 
   const onCloseBtnClick = () => {
     body.removeChild(modalComponent.getElement());
@@ -83,17 +79,14 @@ const renderMainList = () => {
 
   render(filmsSection, listElement);
 
-  const containerMain = listElement.getContainer();
-
-  for (let i = 0; i < Math.min(cards.length, List.LIST_MAIN.cardsCountPerStep); i++) {
-    renderCard(containerMain, cards[i]);
-  }
+  listElement.renderCards(cards);
 
   // Рендер и задание функциональности кнопки Показать больше
   if (cards.length > List.LIST_MAIN.cardsCountPerStep) {
     let renderedTaskCount = List.LIST_MAIN.cardsCountPerStep;
     const loadMoreButtonComponent = new MoreBtnView();
 
+    const containerMain = listElement.getContainer();
     render(containerMain, loadMoreButtonComponent, RenderPlace.AFTER_END);
 
     const onLoadMoreBtn = () => {
@@ -115,20 +108,12 @@ const renderMainList = () => {
 
 // Функция рендера дополнительного списка
 const renderAdditionalList = (listInfo = List.LIST_RATED) => {
-  const {cardsSortingCriterion: sortCriterion, cardsCount} = listInfo;
   const filmsSection = document.querySelector('.films');
   const listElement = new ListView(listInfo);
 
   render(filmsSection, listElement);
 
-  const container = listElement.getContainer();
-
-  const cardsSorted = cards.sort((a, b) =>
-    getValue(b, sortCriterion) - getValue(a, sortCriterion));
-
-  for (let i = 0; i < cardsCount; i++) {
-    renderCard(container, cardsSorted[i]);
-  }
+  listElement.renderCards(cards);
 };
 
 // РЕНДЕР КОМПОНЕНТОВ
