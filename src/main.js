@@ -88,13 +88,11 @@ const renderMainList = () => {
   // Рендер и задание функциональности кнопки Показать больше
   if (cards.length > List.LIST_MAIN.cardsCountPerStep) {
     let renderedTaskCount = List.LIST_MAIN.cardsCountPerStep;
+    const loadMoreButtonComponent = new MoreBtnView();
 
-    render(containerMain, new MoreBtnView().getElement(), RenderPlace.AFTER_END);
+    render(containerMain, loadMoreButtonComponent.getElement(), RenderPlace.AFTER_END);
 
-    const loadMoreButton = filmsSection.querySelector('.films-list__show-more');
-
-    const onLoadMoreBtn = (evt) => {
-      evt.preventDefault();
+    const onLoadMoreBtn = () => {
       cards
         .slice(renderedTaskCount, renderedTaskCount + List.LIST_MAIN.cardsCountPerStep)
         .forEach((card) => renderCard(containerMain, card));
@@ -102,12 +100,12 @@ const renderMainList = () => {
       renderedTaskCount += List.LIST_MAIN.cardsCountPerStep;
 
       if (renderedTaskCount >= cards.length) {
-        loadMoreButton.removeEventListener('click', onLoadMoreBtn);
-        loadMoreButton.remove();
+        loadMoreButtonComponent.getElement().remove();
+        loadMoreButtonComponent.removeElement();
       }
     };
 
-    loadMoreButton.addEventListener('click', onLoadMoreBtn);
+    loadMoreButtonComponent.setClickHandler(onLoadMoreBtn);
   }
 };
 
