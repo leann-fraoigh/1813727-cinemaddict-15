@@ -60,16 +60,12 @@ const renderModal = (card) => {
 // Функция рендера карточки
 const renderCard = (cardsList, card) => {
   const cardComponent = new CardView(card);
-  const modalTriggers = cardComponent.getElement().querySelectorAll('.film-card__poster, .film-card__title, .film-card__comments');
-
-  modalTriggers.forEach((item) => {
-    item.addEventListener('click', (evt) => {
-      evt.preventDefault();
-      renderModal(card);
-    });
-  });
+  const onCardClick = () => {
+    renderModal(card);
+  };
 
   render(cardsList, cardComponent.getElement());
+  cardComponent.setClickHandler(onCardClick);
 };
 
 // Функция рендера главного списка
