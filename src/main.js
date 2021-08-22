@@ -9,7 +9,8 @@ import ModalView from './view/modal.js';
 import FooterStatisticsView from './view/footer-statistics';
 import {generateCard} from './mock/card.js';
 import {generateFilters} from './mock/filters.js';
-import {render, RenderPlace, ScrollState, setScrollLockState, getValue} from './utils.js';
+import {ScrollState, setScrollLockState, getValue} from './utils/common.js';
+import {render, RenderPlace} from './utils/render';
 
 const List = {
   LIST_MAIN: {
@@ -64,7 +65,7 @@ const renderCard = (cardsList, card) => {
     renderModal(card);
   };
 
-  render(cardsList, cardComponent.getElement());
+  render(cardsList, cardComponent);
   cardComponent.setClickHandler(onCardClick);
 };
 
@@ -73,7 +74,7 @@ const renderMainList = () => {
   const filmsSection = document.querySelector('.films');
   const listElement = new ListView(List.LIST_MAIN);
 
-  render(filmsSection, listElement.getElement());
+  render(filmsSection, listElement);
 
   const containerMain = listElement.getContainer();
 
@@ -86,7 +87,7 @@ const renderMainList = () => {
     let renderedTaskCount = List.LIST_MAIN.cardsCountPerStep;
     const loadMoreButtonComponent = new MoreBtnView();
 
-    render(containerMain, loadMoreButtonComponent.getElement(), RenderPlace.AFTER_END);
+    render(containerMain, loadMoreButtonComponent, RenderPlace.AFTER_END);
 
     const onLoadMoreBtn = () => {
       cards
@@ -111,7 +112,7 @@ const renderAdditionalList = (listInfo = List.LIST_RATED) => {
   const filmsSection = document.querySelector('.films');
   const listElement = new ListView(listInfo);
 
-  render(filmsSection, listElement.getElement());
+  render(filmsSection, listElement);
 
   const container = listElement.getContainer();
 
@@ -126,12 +127,12 @@ const renderAdditionalList = (listInfo = List.LIST_RATED) => {
 // РЕНДЕР КОМПОНЕНТОВ
 
 // Рендер профиля
-render(header, new ProfileView(cards).getElement());
+render(header, new ProfileView(cards));
 
 // Рендер меню, фильтра и основной секции
-render(main, new FilterView(filters).getElement());
-render(main, new SortingView().getElement());
-render(main, new MainSectionView().getElement());
+render(main, new FilterView(filters));
+render(main, new SortingView());
+render(main, new MainSectionView());
 
 // Рендер главного списка
 renderMainList();
@@ -141,5 +142,5 @@ renderAdditionalList(List.LIST_RATED);
 renderAdditionalList(List.LIST_COMMENTED);
 
 // Рендер статистики в футере
-render(footer, new FooterStatisticsView(cards).getElement());
+render(footer, new FooterStatisticsView(cards));
 

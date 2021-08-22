@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import {formatRuntime} from '../utils.js';
+import {formatRuntime} from '../utils/common.js';
 import AbstractView from './abstract.js';
 
 

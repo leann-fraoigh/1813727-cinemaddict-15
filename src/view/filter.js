@@ -1,4 +1,4 @@
-import {capitalize, camelCaseToRegular} from '../utils.js';
+import {capitalize, camelCaseToRegular} from '../utils/common.js';
 import AbstractView from './abstract.js';
 
 const ACTIVE_FILTER_CLASS = 'main-navigation__item--active';

@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import {formatRuntime, joinArray} from '../utils.js';
+import {formatRuntime, joinArray} from '../utils/common.js';
 import {createCommentsTemplate} from './comment';
 import AbstractView from './abstract.js';
 

@@ -1,4 +1,4 @@
-import {getRandomInteger, getRandomBoolean} from '../utils.js';
+import {getRandomInteger, getRandomBoolean} from '../utils/common.js';
 import {AGE_RATINGS, GENRES, EMOTICONS} from '../const.js';
 
 const generateReleaseDate = () => (

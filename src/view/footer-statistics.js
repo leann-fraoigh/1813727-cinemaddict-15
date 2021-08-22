@@ -1,4 +1,4 @@
-import {numberWithSpaces} from '../utils.js';
+import {numberWithSpaces} from '../utils/common.js';
 import AbstractView from './abstract.js';
 
 const createFooterStatisticsTemplate = (cards) => (
