@@ -149,16 +149,27 @@ export default class Modal extends AbstractView {
   constructor(card) {
     super();
     this._card = card;
+    this._clickHandler = this._clickHandler.bind(this);
+  }
+
+  _clickHandler(evt) {
+    evt.preventDefault();
+    this._callback.click();
   }
 
   getTemplate() {
     return createModalTemplate(this._card);
   }
 
-  getCloseButton() {
+  _getCloseButton() {
     if (!this._element) {
       return;
     }
     return this._element.querySelector('.film-details__close-btn');
+  }
+
+  setCloseBtnClickHandler(callback) {
+    this._callback.click = callback;
+    this._element.querySelector('.film-details__close-btn').addEventListener('click', this._clickHandler);
   }
 }

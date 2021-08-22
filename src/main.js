@@ -50,12 +50,19 @@ const renderModal = (card) => {
   body.appendChild(modalComponent.getElement());
   setScrollLockState(ScrollState.on);
 
-  const modalCloseBtn = modalComponent.getCloseButton();
-  modalCloseBtn.addEventListener('click', (evt) => {
-    evt.preventDefault();
+  // const modalCloseBtn = modalComponent.getCloseButton();
+  // modalCloseBtn.addEventListener('click', (evt) => {
+  //   evt.preventDefault();
+  //   body.removeChild(modalComponent.getElement());
+  //   setScrollLockState(ScrollState.off);
+  // });
+
+  const onCloseBtnClick = () => {
     body.removeChild(modalComponent.getElement());
     setScrollLockState(ScrollState.off);
-  });
+  };
+
+  modalComponent.setCloseBtnClickHandler(onCloseBtnClick);
 };
 
 // Функция рендера карточки
