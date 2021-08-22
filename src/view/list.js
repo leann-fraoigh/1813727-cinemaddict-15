@@ -1,4 +1,4 @@
-import {createElement} from '../utils.js';
+import AbstractView from './abstract.js';
 
 const createListTemplate = (list) => (
   `<section class="films-list ${list.mod ? list.mod : ''}">
@@ -8,26 +8,15 @@ const createListTemplate = (list) => (
   </section>`
 );
 
-export default class List {
+export default class List extends AbstractView {
   constructor(list) {
+    super();
     this._element = null;
     this._list = list;
   }
 
   getTemplate() {
     return createListTemplate(this._list);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 
   getContainer() {

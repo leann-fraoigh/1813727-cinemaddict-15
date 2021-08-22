@@ -1,5 +1,7 @@
 import dayjs from 'dayjs';
-import {formatRuntime, createElement} from '../utils.js';
+import {formatRuntime} from '../utils.js';
+import AbstractView from './abstract.js';
+
 
 const createCardTemplate = (card) => {
   const {
@@ -48,25 +50,13 @@ const createCardTemplate = (card) => {
   </article>`;
 };
 
-export default class Card {
+export default class Card extends AbstractView {
   constructor(card) {
-    this._element = null;
+    super();
     this._card = card;
   }
 
   getTemplate() {
     return createCardTemplate(this._card);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

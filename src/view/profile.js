@@ -1,5 +1,4 @@
-
-import {createElement} from '../utils.js';
+import AbstractView from './abstract.js';
 
 const getRatingStatus = (watchedFilms) => {
   const Level = {
@@ -30,25 +29,13 @@ const createProfileTemplate = (cards) => {
     </section>`;
 };
 
-export default class Profile {
+export default class Profile extends AbstractView {
   constructor(cards) {
+    super();
     this._cards = cards;
-    this._element = null;
   }
 
   getTemplate() {
     return createProfileTemplate(this._cards);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

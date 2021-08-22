@@ -1,4 +1,5 @@
-import {capitalize, camelCaseToRegular, createElement} from '../utils.js';
+import {capitalize, camelCaseToRegular} from '../utils.js';
+import AbstractView from './abstract.js';
 
 const ACTIVE_FILTER_CLASS = 'main-navigation__item--active';
 
@@ -24,25 +25,13 @@ export const createFilterTemplate = (categories) => {
   </nav>`;
 };
 
-export default class Filter {
+export default class Filter extends AbstractView{
   constructor(filters) {
-    this._element = null;
+    super();
     this._filters = filters;
   }
 
   getTemplate() {
     return createFilterTemplate(this._filters);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

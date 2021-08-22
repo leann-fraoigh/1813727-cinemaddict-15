@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
-import {formatRuntime, joinArray, createElement} from '../utils.js';
+import {formatRuntime, joinArray} from '../utils.js';
 import {createCommentsTemplate} from './comment';
+import AbstractView from './abstract.js';
 
 const createModalTemplate = (card) => {
   const {
@@ -144,26 +145,14 @@ const createModalTemplate = (card) => {
 };
 
 
-export default class Modal {
+export default class Modal extends AbstractView {
   constructor(card) {
-    this._element = null;
+    super();
     this._card = card;
   }
 
   getTemplate() {
     return createModalTemplate(this._card);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 
   getCloseButton() {
