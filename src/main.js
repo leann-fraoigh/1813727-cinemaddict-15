@@ -3,13 +3,10 @@ import FilterView from './view/filter.js';
 import SortingView from './view/sorting.js';
 import MainSectionView from './view/main-section.js';
 import ListView from './view/list.js';
-import CardView from './view/card.js';
 import MoreBtnView from './view/more-button.js';
-import ModalView from './view/modal.js';
 import FooterStatisticsView from './view/footer-statistics';
 import {generateCard} from './mock/card.js';
 import {generateFilters} from './mock/filters.js';
-import {ScrollState, setScrollLockState} from './utils/common.js';
 import {render, RenderPlace} from './utils/render';
 
 const List = {
@@ -38,39 +35,12 @@ const List = {
   },
 };
 
-const body = document.querySelector('body');
 const main = document.querySelector('.main');
 const header = document.querySelector('.header');
 const footer = document.querySelector('.footer');
 
 const cards = Array.from({length: List.LIST_MAIN.cardsToGenerate}, generateCard);
 const filters = generateFilters(cards);
-
-// Функция рендера модаки
-const renderModal = (card) => {
-  const modalComponent = new ModalView(card);
-
-  body.appendChild(modalComponent.getElement());
-  setScrollLockState(ScrollState.on);
-
-  const onCloseBtnClick = () => {
-    body.removeChild(modalComponent.getElement());
-    setScrollLockState(ScrollState.off);
-  };
-
-  modalComponent.setCloseBtnClickHandler(onCloseBtnClick);
-};
-
-// Функция рендера карточки
-const renderCard = (cardsList, card) => {
-  const cardComponent = new CardView(card);
-  const onCardClick = () => {
-    renderModal(card);
-  };
-
-  render(cardsList, cardComponent);
-  cardComponent.setClickHandler(onCardClick);
-};
 
 // Функция рендера главного списка
 const renderMainList = () => {
@@ -90,9 +60,8 @@ const renderMainList = () => {
     render(containerMain, loadMoreButtonComponent, RenderPlace.AFTER_END);
 
     const onLoadMoreBtn = () => {
-      cards
-        .slice(renderedTaskCount, renderedTaskCount + List.LIST_MAIN.cardsCountPerStep)
-        .forEach((card) => renderCard(containerMain, card));
+      const cardsToLoad = cards.slice(renderedTaskCount, renderedTaskCount + List.LIST_MAIN.cardsCountPerStep);
+      listElement.renderCards(cardsToLoad);
 
       renderedTaskCount += List.LIST_MAIN.cardsCountPerStep;
 
