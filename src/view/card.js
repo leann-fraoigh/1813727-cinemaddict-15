@@ -1,5 +1,7 @@
 import dayjs from 'dayjs';
-import {formatRuntime, createElement} from '../utils.js';
+import {formatRuntime} from '../utils/common.js';
+import AbstractView from './abstract.js';
+
 
 const createCardTemplate = (card) => {
   const {
@@ -48,25 +50,33 @@ const createCardTemplate = (card) => {
   </article>`;
 };
 
-export default class Card {
+export default class Card extends AbstractView {
   constructor(card) {
-    this._element = null;
+    super();
     this._card = card;
+    this._clickHandler = this._clickHandler.bind(this);
+  }
+
+  _clickHandler(evt) {
+    evt.preventDefault();
+    this._callback.click();
+  }
+
+  _getClickableElements() {
+    if (!this._element) {
+      return;
+    }
+    return this._element.querySelectorAll('.film-card__poster, .film-card__title, .film-card__comments');
   }
 
   getTemplate() {
     return createCardTemplate(this._card);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  setClickHandler(callback) {
+    this._callback.click = callback;
+    this._getClickableElements().forEach((item) => {
+      item.addEventListener('click', this._clickHandler);
+    });
   }
 }

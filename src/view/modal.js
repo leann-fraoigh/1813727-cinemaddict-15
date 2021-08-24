@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
-import {formatRuntime, joinArray, createElement} from '../utils.js';
+import {formatRuntime, joinArray} from '../utils/common.js';
 import {createCommentsTemplate} from './comment';
+import AbstractView from './abstract.js';
 
 const createModalTemplate = (card) => {
   const {
@@ -144,32 +145,31 @@ const createModalTemplate = (card) => {
 };
 
 
-export default class Modal {
+export default class Modal extends AbstractView {
   constructor(card) {
-    this._element = null;
+    super();
     this._card = card;
+    this._clickHandler = this._clickHandler.bind(this);
+  }
+
+  _clickHandler(evt) {
+    evt.preventDefault();
+    this._callback.click();
   }
 
   getTemplate() {
     return createModalTemplate(this._card);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
-
-  getCloseButton() {
+  _getCloseButton() {
     if (!this._element) {
       return;
     }
     return this._element.querySelector('.film-details__close-btn');
+  }
+
+  setCloseBtnClickHandler(callback) {
+    this._callback.click = callback;
+    this._element.querySelector('.film-details__close-btn').addEventListener('click', this._clickHandler);
   }
 }
