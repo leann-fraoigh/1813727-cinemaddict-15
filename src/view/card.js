@@ -73,7 +73,7 @@ export default class Card extends AbstractView {
     return createCardTemplate(this._card);
   }
 
-  setClickHandler(callback) {
+  setMoreClickHandler(callback) {
     this._callback.click = callback;
     this._getClickableElements().forEach((item) => {
       item.addEventListener('click', this._clickHandler);
