@@ -149,12 +149,30 @@ export default class Modal extends AbstractView {
   constructor(card) {
     super();
     this._card = card;
-    this._clickHandler = this._clickHandler.bind(this);
+    this._closeClickHandler = this._closeClickHandler.bind(this);
+    this._listClickHandler = this._listClickHandler.bind(this);
+    this._watchedClickHandler = this._watchedClickHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
   }
 
-  _clickHandler(evt) {
+  _closeClickHandler(evt) {
     evt.preventDefault();
-    this._callback.click();
+    this._callback.closeClick();
+  }
+
+  _listClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.listClick();
+  }
+
+  _watchedClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.watchedClick();
+  }
+
+  _favoriteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.favoriteClick();
   }
 
   getTemplate() {
@@ -169,7 +187,22 @@ export default class Modal extends AbstractView {
   }
 
   setCloseBtnClickHandler(callback) {
-    this._callback.click = callback;
-    this._element.querySelector('.film-details__close-btn').addEventListener('click', this._clickHandler);
+    this._callback.closeClick = callback;
+    this._element.querySelector('.film-details__close-btn').addEventListener('click', this._closeClickHandler);
+  }
+
+  setListClickHandler(callback) {
+    this._callback.listClick = callback;
+    this.getElement().querySelector('.film-details__control-button--watchlist').addEventListener('click', this._listClickHandler);
+  }
+
+  setWatchedClickHandler(callback) {
+    this._callback.watchedClick = callback;
+    this.getElement().querySelector('.film-details__control-button--watched').addEventListener('click', this._watchedClickHandler);
+  }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.getElement().querySelector('.film-details__control-button--favorite').addEventListener('click', this._favoriteClickHandler);
   }
 }
