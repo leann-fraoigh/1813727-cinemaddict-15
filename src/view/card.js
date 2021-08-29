@@ -54,19 +54,37 @@ export default class Card extends AbstractView {
   constructor(card) {
     super();
     this._card = card;
-    this._clickHandler = this._clickHandler.bind(this);
+    this._moreClickHandler = this._moreClickHandler.bind(this);
+    this._listClickHandler = this._listClickHandler.bind(this);
+    this._watchedClickHandler = this._watchedClickHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
   }
 
-  _clickHandler(evt) {
+  _moreClickHandler(evt) {
     evt.preventDefault();
     this._callback.click();
   }
 
+  _listClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.listClick();
+  }
+
+  _watchedClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.watchedClick();
+  }
+
+  _favoriteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.favoriteClick();
+  }
+
   _getClickableElements() {
-    if (!this._element) {
+    if (!this.getElement()) {
       return;
     }
-    return this._element.querySelectorAll('.film-card__poster, .film-card__title, .film-card__comments');
+    return this.getElement().querySelectorAll('.film-card__poster, .film-card__title, .film-card__comments');
   }
 
   getTemplate() {
@@ -76,7 +94,23 @@ export default class Card extends AbstractView {
   setMoreClickHandler(callback) {
     this._callback.click = callback;
     this._getClickableElements().forEach((item) => {
-      item.addEventListener('click', this._clickHandler);
+      item.addEventListener('click', this._moreClickHandler);
     });
+  }
+
+  setListClickHandler(callback) {
+    this._callback.listClick = callback;
+    this.getElement().querySelector('.film-card__controls-item--add-to-watchlist').addEventListener('click', this._listClickHandler);
+  }
+
+  setWatchedClickHandler(callback) {
+    this._callback.watchedClick = callback;
+    this.getElement().querySelector('.film-card__controls-item--mark-as-watched').addEventListener('click', this._watchedClickHandler);
+  }
+
+  setFavoriteClickHandler(callback) {
+    // this.getElement().querySelector('.film-card__controls-item--favorite').removeEventListener('click', this._favoriteClickHandler);
+    this._callback.favoriteClick = callback;
+    this.getElement().querySelector('.film-card__controls-item--favorite').addEventListener('click', this._favoriteClickHandler);
   }
 }

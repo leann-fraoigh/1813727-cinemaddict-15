@@ -8,31 +8,6 @@ import {generateFilters} from './mock/filters.js';
 import {render} from './utils/render';
 
 const CARDS_COUNT = 22;
-// const List = {
-//   LIST_MAIN: {
-//     isMain: true,
-//     title: 'All movies. Upcoming',
-//     headerIsHidden: true,
-//     cardsToGenerate: 22,
-//     cardsCountPerStep: 5,
-//   },
-
-//   LIST_RATED: {
-//     isMain: false,
-//     title: 'Top rated',
-//     mod: 'films-list--extra',
-//     cardsCountPerStep: 2,
-//     cardsSortingCriterion: 'filmInfo.totalRating',
-//   },
-
-//   LIST_COMMENTED: {
-//     isMain: false,
-//     title: 'Most Commented',
-//     mod: 'films-list--extra',
-//     cardsCountPerStep: 2,
-//     cardsSortingCriterion: 'comments.length',
-//   },
-// };
 
 const main = document.querySelector('.main');
 const header = document.querySelector('.header');

@@ -2,19 +2,21 @@ import ListView from '../view/list.js';
 import MoreBtnView from '../view/more-button';
 import CardPresenter from './card.js';
 
-import {getValue} from '../utils/common.js';
+import {getValue, updateItem} from '../utils/common.js';
 import {render, RenderPlace} from '../utils/render';
 
 export default class List {
   constructor(list, container) {
     this._list = list;
     this._listContainer = container;
-    this._renderedTaskCount = this._list.cardsCountPerStep;
-    this._cardPresenter = new Map();
+    this._renderedCardCount = this._list.cardsCountPerStep;
 
+    this._cardPresenter = new Map();
     this._loadMoreButtonComponent = new MoreBtnView();
 
     this._handleLoadMoreBtnClick = this._handleLoadMoreBtnClick.bind(this);
+    this._handleCardChange = this._handleCardChange.bind(this);
+    this._handleModalChange = this._handleModalChange.bind(this);
   }
 
   init(cards) {
@@ -28,7 +30,7 @@ export default class List {
   }
 
   _renderCard(card) {
-    const cardPresenter = new CardPresenter(this._listElement.getContainer(), this._handleModalChange);
+    const cardPresenter = new CardPresenter(this._listElement.getContainer(), this._handleCardChange, this._handleModalChange);
     cardPresenter.init(card);
     this._cardPresenter.set(card.id, cardPresenter);
   }
@@ -39,15 +41,23 @@ export default class List {
   }
 
   _handleLoadMoreBtnClick() {
-    this._renderCards(this._renderedTaskCount, this._renderedTaskCount + this._list.cardsCountPerStep);
+    this._renderCards(this._renderedCardCount, this._renderedCardCount + this._list.cardsCountPerStep);
 
-    this._renderedTaskCount += this._list.cardsCountPerStep;
+    this._renderedCardCount += this._list.cardsCountPerStep;
 
-
-    if (this._renderedTaskCount >= this._cards.length) {
+    if (this._renderedCardCount >= this._cards.length) {
       this._loadMoreButtonComponent.getElement().remove();
       this._loadMoreButtonComponent.removeElement();
     }
+  }
+
+  _handleModalChange() {
+    this._cardPresenter.forEach((presenter) => presenter.closeModal());
+  }
+
+  _handleCardChange(updatedCard) {
+    this._cards = updateItem(this._cards, updatedCard);
+    this._cardPresenter.get(updatedCard.id).init(updatedCard);
   }
 
   _renderCards(from, to) {
@@ -71,4 +81,11 @@ export default class List {
       this._renderLoadMoreBtn();
     }
   }
+
+  // _clearCardList() {
+  //   this._cardPresenter.forEach((presenter) => presenter.destroy());
+  //   this._cardPresenter.clear();
+  //   this._renderedCardCount = this._list.cardsCountPerStep;
+  //   remove(this._loadMoreButtonComponent);
+  // }
 }
