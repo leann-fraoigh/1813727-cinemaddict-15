@@ -17,6 +17,7 @@ export default class Card {
     this._handleWatchedClick = this._handleWatchedClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._handleCloseBtnClick = this._handleCloseBtnClick.bind(this);
+    this._handleFormSubmit = this._handleFormSubmit.bind(this);
   }
 
   init(card) {
@@ -39,7 +40,9 @@ export default class Card {
     }
 
     if (this._modalComponent) {
+      const prevScrollPosition = this._modalComponent.getScrollPosition();
       this._openModal();
+      this._modalComponent.setScrollPosition(prevScrollPosition);
     }
 
     remove(prevCardComponent);
@@ -65,6 +68,7 @@ export default class Card {
     this._modalComponent.setListClickHandler(this._handleListClick);
     this._modalComponent.setWatchedClickHandler(this._handleWatchedClick);
     this._modalComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+    this._modalComponent.setFormSubmitHandler(this._handleFormSubmit);
   }
 
   _handleMoreClick() {
@@ -118,5 +122,9 @@ export default class Card {
         },
       ),
     );
+  }
+
+  _handleFormSubmit(card) {
+    this._changeData(card);
   }
 }
