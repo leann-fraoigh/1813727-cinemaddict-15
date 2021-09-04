@@ -28,10 +28,8 @@ const createModalTemplate = (data) => {
       favorite,
     },
     comments,
-    newComment: {
-      newCommentText,
-      newCommentEmoticon,
-    },
+    newCommentText = data.newComment ? data.newComment.newCommentText : null,
+    newCommentEmoticon = data.newComment ? data.newComment.newCommentEmoticon : null,
   } = data;
 
   const formattedRuntime = formatRuntime(runtime);
@@ -155,7 +153,7 @@ const createModalTemplate = (data) => {
 export default class Modal extends Smart {
   constructor(card) {
     super();
-    this._data = Modal.parseCardToData(card); // Почему не работает с this вместо Modal? :(
+    this._data = Modal.parseCardToData(card);
     this._closeClickHandler = this._closeClickHandler.bind(this);
     this._listClickHandler = this._listClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
@@ -213,7 +211,7 @@ export default class Modal extends Smart {
     evt.preventDefault();
     this.updateData({
       newComment: {
-        newCommentText: this._data.newComment.newCommentText,
+        ...this._data.newComment,
         newCommentEmoticon: evt.target.value,
       },
     });
@@ -272,19 +270,13 @@ export default class Modal extends Smart {
     return Object.assign(
       {},
       card,
-      {
-        newComment: {
-          newCommentText: null, // Не уверена, что здесь нужен менно null
-          newCommentEmoticon: null, // Не уверена, что здесь нужен менно null
-        },
-      },
     );
   }
 
   static parseDataToCard(data) {
     data = Object.assign({}, data);
 
-    if (data.newComment.newCommentText || data.newComment.newCommentEmoticon) {
+    if (data.newComment) {
       data.comments.push({
         id: '42', // Пока статика
         author: 'Jane Doe', // Тоже пока статика
