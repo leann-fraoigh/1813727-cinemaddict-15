@@ -40,9 +40,7 @@ export default class Card {
     }
 
     if (this._modalComponent) {
-      const prevScrollPosition = this._modalComponent.getScrollPosition();
-      this._openModal();
-      this._modalComponent.setScrollPosition(prevScrollPosition);
+      this._modalComponent.updateData(card);
     }
 
     remove(prevCardComponent);
