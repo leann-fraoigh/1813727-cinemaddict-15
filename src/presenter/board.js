@@ -31,10 +31,20 @@ const List = {
 };
 
 export default class Board {
-  constructor(container) {
+  constructor(container, cardsModel) {
     this._container = container;
+    this._cardsModel = cardsModel;
     this._sortingComponent = new SortingView();
     this._mainSectionComponent = new MainSectionView();
+  }
+
+  init () {
+    this._cards = this._getCards();
+
+    render(this._container, this._sortingComponent);
+    render(this._container, this._mainSectionComponent);
+
+    this._renderLists(this._mainSectionComponent);
   }
 
   _renderLists(container) {
@@ -44,12 +54,7 @@ export default class Board {
     }
   }
 
-  init (cards) {
-    this._cards = cards.slice();
-
-    render(this._container, this._sortingComponent);
-    render(this._container, this._mainSectionComponent);
-
-    this._renderLists(this._mainSectionComponent);
+  _getCards() {
+    return this._cardsModel.getCards();
   }
 }
