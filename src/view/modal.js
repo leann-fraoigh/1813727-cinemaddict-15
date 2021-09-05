@@ -258,7 +258,7 @@ export default class Modal extends Smart {
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit(Modal.parseDataToCard(this._data));
+    this._callback.formSubmit(Modal.processDataToCard(this._data));
   }
 
   setFormSubmitHandler(callback) {
@@ -273,9 +273,7 @@ export default class Modal extends Smart {
     );
   }
 
-  static parseDataToCard(data) {
-    data = Object.assign({}, data);
-
+  static processDataToCard(data) {
     if (data.newComment) {
       data.comments.push({
         id: '42', // Пока статика
