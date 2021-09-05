@@ -1,9 +1,9 @@
 import dayjs from 'dayjs';
 import {formatRuntime, joinArray} from '../utils/common.js';
 import {createCommentsTemplate} from './comment';
-import AbstractView from './abstract.js';
+import Smart from './smart.js';
 
-const createModalTemplate = (card) => {
+const createModalTemplate = (data) => {
   const {
     filmInfo: {
       title,
@@ -28,7 +28,9 @@ const createModalTemplate = (card) => {
       favorite,
     },
     comments,
-  } = card;
+    newCommentText = data.newComment ? data.newComment.newCommentText : null,
+    newCommentEmoticon = data.newComment ? data.newComment.newCommentEmoticon : null,
+  } = data;
 
   const formattedRuntime = formatRuntime(runtime);
   const releaseDate = dayjs(date).format('D MMMM YYYY');
@@ -110,32 +112,35 @@ const createModalTemplate = (card) => {
           <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
           ${listOfComments}
           <div class="film-details__new-comment">
-            <div class="film-details__add-emoji-label"></div>
+            <div class="film-details__add-emoji-label">
+              ${newCommentEmoticon ? `<img src="images/emoji/${newCommentEmoticon}.png" width="55" height="55" alt="emoji-smile">` : ''}
+            </div>
 
             <label class="film-details__comment-label">
-              <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+              <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${newCommentText ? newCommentText : ''}</textarea>
             </label>
 
             <div class="film-details__emoji-list">
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
+              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile" ${newCommentEmoticon === 'smile' ? 'checked' : ''}>
               <label class="film-details__emoji-label" for="emoji-smile">
                 <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
               </label>
 
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
+              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping" ${newCommentEmoticon === 'sleeping' ? 'checked' : ''}>
               <label class="film-details__emoji-label" for="emoji-sleeping">
                 <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
               </label>
 
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
+              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke" ${newCommentEmoticon === 'puke' ? 'checked' : ''}>
               <label class="film-details__emoji-label" for="emoji-puke">
                 <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
               </label>
 
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
+              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry" ${newCommentEmoticon === 'angry' ? 'checked' : ''}>
               <label class="film-details__emoji-label" for="emoji-angry">
                 <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
               </label>
+              <button type="submit">Временная кнопка сабмита</button>
             </div>
           </div>
         </section>
@@ -145,14 +150,19 @@ const createModalTemplate = (card) => {
 };
 
 
-export default class Modal extends AbstractView {
+export default class Modal extends Smart {
   constructor(card) {
     super();
-    this._card = card;
+    this._data = Modal.parseCardToData(card);
     this._closeClickHandler = this._closeClickHandler.bind(this);
     this._listClickHandler = this._listClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+    this._emojiChangeHandler = this._emojiChangeHandler.bind(this);
+    this._commentInputHandler = this._commentInputHandler.bind(this);
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
+
+    this._setInnerHandlers();
   }
 
   _closeClickHandler(evt) {
@@ -176,7 +186,7 @@ export default class Modal extends AbstractView {
   }
 
   getTemplate() {
-    return createModalTemplate(this._card);
+    return createModalTemplate(this._data);
   }
 
   _getCloseButton() {
@@ -184,6 +194,46 @@ export default class Modal extends AbstractView {
       return;
     }
     return this._element.querySelector('.film-details__close-btn');
+  }
+
+  _setInnerHandlers() {
+    this.getElement()
+      .querySelectorAll('.film-details__emoji-list input')
+      .forEach((radio) => {
+        radio.addEventListener('click', this._emojiChangeHandler);
+      });
+    this.getElement()
+      .querySelector('.film-details__comment-input')
+      .addEventListener('input', this._commentInputHandler);
+  }
+
+  _emojiChangeHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      newComment: {
+        ...this._data.newComment,
+        newCommentEmoticon: evt.target.value,
+      },
+    });
+  }
+
+  _commentInputHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      newComment: {
+        ...this._data.newComment,
+        newCommentText: evt.target.value,
+      },
+    }, true);
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this.setCloseBtnClickHandler(this._callback.closeClick);
+    this.setListClickHandler(this._callback.listClick);
+    this.setWatchedClickHandler(this._callback.watchedClick);
+    this.setFavoriteClickHandler(this._callback.favoriteClick);
+    this.getElement().querySelector('form').addEventListener('submit', this._formSubmitHandler);
   }
 
   setCloseBtnClickHandler(callback) {
@@ -204,5 +254,38 @@ export default class Modal extends AbstractView {
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
     this.getElement().querySelector('.film-details__control-button--favorite').addEventListener('click', this._favoriteClickHandler);
+  }
+
+  _formSubmitHandler(evt) {
+    evt.preventDefault();
+    this._callback.formSubmit(Modal.processDataToCard(this._data));
+  }
+
+  setFormSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
+    this.getElement().querySelector('form').addEventListener('submit', this._formSubmitHandler);
+  }
+
+  static parseCardToData(card) {
+    return Object.assign(
+      {},
+      card,
+    );
+  }
+
+  static processDataToCard(data) {
+    if (data.newComment) {
+      data.comments.push({
+        id: '42', // Пока статика
+        author: 'Jane Doe', // Тоже пока статика
+        comment: data.newComment.newCommentText,
+        date: Date.now(),
+        emoticon: data.newComment.newCommentEmoticon,
+      });
+    }
+
+    delete data.newComment;
+
+    return data;
   }
 }
