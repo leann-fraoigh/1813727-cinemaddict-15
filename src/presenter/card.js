@@ -3,6 +3,7 @@ import CardView from '../view/card.js';
 
 import {ScrollState, setScrollLockState} from '../utils/common.js';
 import {render, replace, remove} from '../utils/render';
+import {UserAction, UpdateType} from '../const.js';
 
 export default class Card {
   constructor(cardContainer, changeData, changeModal) {
@@ -46,6 +47,10 @@ export default class Card {
     remove(prevCardComponent);
   }
 
+  destroy() {
+    remove(this._cardComponent);
+  }
+
   closeModal() {
     if (this._modalComponent) {
       remove(this._modalComponent);
@@ -79,6 +84,8 @@ export default class Card {
 
   _handleListClick() {
     this._changeData(
+      UserAction.UPDATE_CARD,
+      UpdateType.MAJOR,
       Object.assign(
         {},
         this._card,
@@ -94,6 +101,8 @@ export default class Card {
 
   _handleWatchedClick() {
     this._changeData(
+      UserAction.UPDATE_CARD,
+      UpdateType.MAJOR,
       Object.assign(
         {},
         this._card,
@@ -109,6 +118,8 @@ export default class Card {
 
   _handleFavoriteClick() {
     this._changeData(
+      UserAction.UPDATE_CARD,
+      UpdateType.MAJOR,
       Object.assign(
         {},
         this._card,
@@ -123,6 +134,9 @@ export default class Card {
   }
 
   _handleFormSubmit(card) {
-    this._changeData(card);
+    this._changeData(
+      UserAction.UPDATE_CARD,
+      UpdateType.MINOR,
+      card);
   }
 }

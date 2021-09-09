@@ -23,7 +23,7 @@ cardsModel.setCards(cards);
 // РЕНДЕР КОМПОНЕНТОВ
 
 // Рендер профиля
-render(header, new ProfileView(cards));
+render(header, new ProfileView(cardsModel.getCards()));
 
 // Рендер меню
 render(main, new FilterView(filters));
@@ -33,5 +33,5 @@ const boardPresenter = new BoardPresenter(main, cardsModel);
 boardPresenter.init();
 
 // Рендер статистики в футере
-render(footer, new FooterStatisticsView(cards));
+render(footer, new FooterStatisticsView(cardsModel.getCards()));
 
