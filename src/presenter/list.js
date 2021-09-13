@@ -1,27 +1,34 @@
 import ListView from '../view/list.js';
 import MoreBtnView from '../view/more-button';
 import CardPresenter from './card.js';
+import ModalPresenter from './modal.js';
 
 import {remove, render, RenderPlace} from '../utils/render';
 import {sortByRating, sortByDate, sortByComments} from '../utils/card.js';
 import {SortType, UserAction, UpdateType} from '../const.js';
 
 export default class List {
-  constructor(list, container, cardsModel) {
+  constructor(list, container, cardsModel, closeAllModals) {
     this._list = list;
     this._listContainer = container;
     this._cardsModel = cardsModel;
     this._renderedCardCount = this._list.cardsCountPerStep;
     this._currentSortType = SortType.DEFAULT;
+    this._modal = null;
 
     this._cardPresenter = new Map();
     this._loadMoreButtonComponent = new MoreBtnView();
+    this._modalPresenter = null;
 
     this._handleLoadMoreBtnClick = this._handleLoadMoreBtnClick.bind(this);
-    this._handleModalChange = this._handleModalChange.bind(this);
+    // this._handleModalChange = this._handleModalChange.bind(this);
+    this._openModal = this._openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._cardsModel.addObserver(this._handleModelEvent);
+    this._closeAllModals = closeAllModals;
+    // this._clearCurrentModal = this._clearCurrentModal.bind(this);
   }
 
   init() {
@@ -32,7 +39,7 @@ export default class List {
   }
 
   _renderCard(card) {
-    const cardPresenter = new CardPresenter(this._listElement.getContainer(), this._handleViewAction, this._handleModalChange);
+    const cardPresenter = new CardPresenter(this._listElement.getContainer(), this._handleViewAction, this._openModal, this._setModal);
     cardPresenter.init(card);
     this._cardPresenter.set(card.id, cardPresenter);
   }
@@ -53,8 +60,31 @@ export default class List {
     }
   }
 
-  _handleModalChange() {
-    this._cardPresenter.forEach((presenter) => presenter.closeModal());
+  _openModal(card) {
+    this._closeAllModals();
+    this._modalPresenter = new ModalPresenter(card, this._handleViewAction, this.closeModal);
+    this._modalPresenter.init();
+  }
+
+  // _clearCurrentModal() {
+  //   this._modalPresenter = null;
+  // }
+
+  closeModal() {
+    if (this._modalPresenter) {
+      this._modalPresenter.destroy();
+      // this._clearCurrentModal();
+      this._modalPresenter = null;
+    }
+  }
+
+  _updateModal() {
+    if (this._modalPresenter) {
+      const index = this._cardsModel._cards.findIndex((card) => card.id === this._modalPresenter._card.id);
+      const currentlyOpenMovie = this._cardsModel._cards[index];
+      this.closeModal();
+      this._openModal(currentlyOpenMovie);
+    }
   }
 
   _handleViewAction(actionType, updateType, update) {
@@ -126,6 +156,7 @@ export default class List {
         // - обновить всю доску (добавление или удаление комментария)
         this._clearList();
         this._renderList();
+        this._updateModal();
         break;
     }
   }

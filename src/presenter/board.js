@@ -39,6 +39,8 @@ export default class Board {
     this._sortingComponent = new SortingView();
     this._mainSectionComponent = new MainSectionView();
     this._listPresenters = new Map();
+
+    this._handleModalChange = this._handleModalChange.bind(this);
   }
 
   init () {
@@ -50,9 +52,13 @@ export default class Board {
 
   _renderLists(container) {
     for (const list of Object.values(List)) {
-      this._listPresenter = new ListPresenter(list, container, this._cardsModel);
+      this._listPresenter = new ListPresenter(list, container, this._cardsModel, this._handleModalChange);
       this._listPresenter.init();
       this._listPresenters.set(list.cardsSortingCriterion, this._listPresenter);
     }
+  }
+
+  _handleModalChange() {
+    this._listPresenters.forEach((presenter) => presenter.closeModal());
   }
 }
