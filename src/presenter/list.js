@@ -40,10 +40,6 @@ export default class List {
     this._listElement = new ListView(this._list);
     render(this._listContainer, this._listElement);
 
-    if (this._list.isMain) {
-      this._renderSort();
-    }
-
     this._renderList();
   }
 
@@ -73,6 +69,8 @@ export default class List {
     this._cardPresenter.clear();
 
     remove(this._loadMoreButtonComponent);
+
+    remove(this._sortComponent);
 
     if (resetRenderedCardCount) {
       this._renderedCardCount = this._list.cardsCountPerStep;
@@ -106,6 +104,10 @@ export default class List {
   }
 
   _renderList() {
+    if (this._list.isMain) {
+      this._renderSort();
+    }
+
     this._renderCardsList();
   }
 
@@ -163,6 +165,7 @@ export default class List {
   }
 
   _renderSort() {
+    console.log(2);
     if (this._sortComponent !== null) {
       this._sortComponent = null;
     }
