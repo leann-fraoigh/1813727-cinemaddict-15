@@ -36,7 +36,7 @@ export default class Board {
   constructor(container, cardsModel) {
     this._container = container;
     this._cardsModel = cardsModel;
-    this._sortingComponent = new SortingView();
+    // this._sortingComponent = new SortingView();
     this._mainSectionComponent = new MainSectionView();
     this._listPresenters = new Map();
 
@@ -44,7 +44,7 @@ export default class Board {
   }
 
   init () {
-    render(this._container, this._sortingComponent);
+    // render(this._container, this._sortingComponent);
     render(this._container, this._mainSectionComponent);
 
     this._renderLists(this._mainSectionComponent);

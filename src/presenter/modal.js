@@ -22,8 +22,6 @@ export default class Modal {
   init() {
     this._modalComponent = new ModalView(this._card);
 
-    // this._changeModal();
-
     this._modalContainer.appendChild(this._modalComponent.getElement());
     setScrollLockState(ScrollState.on);
 
@@ -32,21 +30,6 @@ export default class Modal {
     this._modalComponent.setWatchedClickHandler(this._handleWatchedClick);
     this._modalComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._modalComponent.setFormSubmitHandler(this._handleFormSubmit);
-
-    // if (prevCardComponent === null) {
-    //   render(this._cardContainer, this._cardComponent);
-    //   return;
-    // }
-
-    // if (this._cardContainer.contains(prevCardComponent.getElement())) {
-    //   replace(this._cardComponent, prevCardComponent);
-    // }
-
-    // if (this._modalComponent) {
-    //   this._modalComponent.updateData(card);
-    // }
-
-    // remove(prevCardComponent);
   }
 
   destroy() {
@@ -56,7 +39,6 @@ export default class Modal {
   }
 
   _handleCloseBtnClick() {
-    // this.destroy();
     this._closeModal();
   }
 
@@ -117,5 +99,4 @@ export default class Modal {
       UpdateType.MINOR,
       card);
   }
-
 }

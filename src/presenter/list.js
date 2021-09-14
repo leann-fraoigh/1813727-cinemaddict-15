@@ -1,4 +1,5 @@
 import ListView from '../view/list.js';
+import SortView from '../view/sorting.js';
 import MoreBtnView from '../view/more-button';
 import CardPresenter from './card.js';
 import ModalPresenter from './modal.js';
@@ -12,28 +13,32 @@ export default class List {
     this._list = list;
     this._listContainer = container;
     this._cardsModel = cardsModel;
+    this._closeAllModals = closeAllModals;
     this._renderedCardCount = this._list.cardsCountPerStep;
-    this._currentSortType = SortType.DEFAULT;
-    this._modal = null;
+    this._currentSortType = this._list.cardsSortingCriterion;
 
-    this._cardPresenter = new Map();
+    this._modal = null;
     this._loadMoreButtonComponent = new MoreBtnView();
+    this._sortComponent = null;
+    this._cardPresenter = new Map();
     this._modalPresenter = null;
 
     this._handleLoadMoreBtnClick = this._handleLoadMoreBtnClick.bind(this);
-    // this._handleModalChange = this._handleModalChange.bind(this);
     this._openModal = this._openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
+    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._cardsModel.addObserver(this._handleModelEvent);
-    this._closeAllModals = closeAllModals;
-    // this._clearCurrentModal = this._clearCurrentModal.bind(this);
   }
 
   init() {
     this._listElement = new ListView(this._list);
     render(this._listContainer, this._listElement);
+
+    if (this._list.isMain) {
+      this._renderSort();
+    }
 
     this._renderList();
   }
@@ -66,14 +71,9 @@ export default class List {
     this._modalPresenter.init();
   }
 
-  // _clearCurrentModal() {
-  //   this._modalPresenter = null;
-  // }
-
   closeModal() {
     if (this._modalPresenter) {
       this._modalPresenter.destroy();
-      // this._clearCurrentModal();
       this._modalPresenter = null;
     }
   }
@@ -110,7 +110,6 @@ export default class List {
   }
 
   _renderCardsList() {
-    this._currentSortType = this._list.cardsSortingCriterion;
     const cards = this._getCards();
     const isMainList = this._list.isMain;
     this._renderCards(cards.slice(0, Math.min(cards.length, this._renderedCardCount)));
@@ -120,15 +119,14 @@ export default class List {
     }
   }
 
-  // _handleSortTypeChange(sortType) {
-  //   if (this._currentSortType === sortType) {
-  //     return;
-  //   }
-
-  //   this._currentSortType = sortType;
-  //   this._clearCardList();
-  //   this._renderCardList();
-  // }
+  _handleSortTypeChange(sortType) {
+    if (this._currentSortType === sortType) {
+      return;
+    }
+    this._currentSortType = sortType;
+    this._clearList();
+    this._renderList();
+  }
 
   _getCards() {
     switch (this._currentSortType) {
@@ -176,11 +174,21 @@ export default class List {
     }
 
     if (resetSortType) {
-      // this._currentSortType = SortType.DEFAULT;
+      this._currentSortType = SortType.DEFAULT;
     }
   }
 
   _renderList() {
     this._renderCardsList();
+  }
+
+  _renderSort() {
+    if (this._sortComponent !== null) {
+      this._sortComponent = null;
+    }
+
+    this._sortComponent = new SortView(this._currentSortType);
+    this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
+    render(this._listContainer, this._sortComponent, RenderPlace.AFTER_BEGIN);
   }
 }
