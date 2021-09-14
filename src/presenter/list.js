@@ -43,16 +43,65 @@ export default class List {
     this._renderList();
   }
 
+  // Методы, касающиеся списка карточек
+
+  _getCards() {
+    switch (this._currentSortType) {
+      case SortType.RATING:
+        return this._cardsModel.getCards().slice().sort(sortByRating);
+      case SortType.DATE:
+        return this._cardsModel.getCards().slice().sort(sortByDate);
+      case SortType.COMMENTS:
+        return this._cardsModel.getCards().slice().sort(sortByComments);
+    }
+
+    return this._cardsModel.getCards();
+  }
+
+  _clearList({resetRenderedCardCount = false, resetSortType = false} = {}) {
+    const cardCount = this._getCards().length;
+
+    this._cardPresenter.forEach((presenter) => presenter.destroy());
+    this._cardPresenter.clear();
+
+    remove(this._loadMoreButtonComponent);
+
+    if (resetRenderedCardCount) {
+      this._renderedCardCount = this._list.cardsCountPerStep;
+    } else {
+      this._renderedCardCount = Math.min(cardCount, this._renderedCardCount);
+    }
+
+    if (resetSortType) {
+      this._currentSortType = SortType.DEFAULT;
+    }
+  }
+
   _renderCard(card) {
     const cardPresenter = new CardPresenter(this._listElement.getContainer(), this._handleViewAction, this._openModal, this._setModal);
     cardPresenter.init(card);
     this._cardPresenter.set(card.id, cardPresenter);
   }
 
-  _renderLoadMoreBtn() {
-    render(this._listElement.getContainer(), this._loadMoreButtonComponent, RenderPlace.AFTER_END);
-    this._loadMoreButtonComponent.setClickHandler(this._handleLoadMoreBtnClick);
+  _renderCards(cards) {
+    cards.forEach((card) => this._renderCard(card));
   }
+
+  _renderCardsList() {
+    const cards = this._getCards();
+    const isMainList = this._list.isMain;
+    this._renderCards(cards.slice(0, Math.min(cards.length, this._renderedCardCount)));
+
+    if (isMainList && cards.length > this._list.cardsCountPerStep) {
+      this._renderLoadMoreBtn();
+    }
+  }
+
+  _renderList() {
+    this._renderCardsList();
+  }
+
+  // Методы, касающиеся кнопки Показать больше
 
   _handleLoadMoreBtnClick() {
     this._renderCards(this._getCards().slice(this._renderedCardCount, this._renderedCardCount + this._list.cardsCountPerStep));
@@ -64,6 +113,13 @@ export default class List {
       this._loadMoreButtonComponent.removeElement();
     }
   }
+
+  _renderLoadMoreBtn() {
+    render(this._listElement.getContainer(), this._loadMoreButtonComponent, RenderPlace.AFTER_END);
+    this._loadMoreButtonComponent.setClickHandler(this._handleLoadMoreBtnClick);
+  }
+
+  // Методы, касающиеся модалки
 
   _openModal(card) {
     this._closeAllModals();
@@ -87,6 +143,27 @@ export default class List {
     }
   }
 
+  // Методы, касающиеся сортировки
+
+  _handleSortTypeChange(sortType) {
+    if (this._currentSortType === sortType) {
+      return;
+    }
+    this._currentSortType = sortType;
+    this._clearList();
+    this._renderList();
+  }
+
+  _renderSort() {
+    if (this._sortComponent !== null) {
+      this._sortComponent = null;
+    }
+
+    this._sortComponent = new SortView(this._currentSortType);
+    this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
+    render(this._listContainer, this._sortComponent, RenderPlace.AFTER_BEGIN);
+  }
+
   _handleViewAction(actionType, updateType, update) {
     // Здесь будем вызывать обновление модели.
     // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
@@ -105,42 +182,6 @@ export default class List {
     }
   }
 
-  _renderCards(cards) {
-    cards.forEach((card) => this._renderCard(card));
-  }
-
-  _renderCardsList() {
-    const cards = this._getCards();
-    const isMainList = this._list.isMain;
-    this._renderCards(cards.slice(0, Math.min(cards.length, this._renderedCardCount)));
-
-    if (isMainList && cards.length > this._list.cardsCountPerStep) {
-      this._renderLoadMoreBtn();
-    }
-  }
-
-  _handleSortTypeChange(sortType) {
-    if (this._currentSortType === sortType) {
-      return;
-    }
-    this._currentSortType = sortType;
-    this._clearList();
-    this._renderList();
-  }
-
-  _getCards() {
-    switch (this._currentSortType) {
-      case SortType.RATING:
-        return this._cardsModel.getCards().slice().sort(sortByRating);
-      case SortType.DATE:
-        return this._cardsModel.getCards().slice().sort(sortByDate);
-      case SortType.COMMENTS:
-        return this._cardsModel.getCards().slice().sort(sortByComments);
-    }
-
-    return this._cardsModel.getCards();
-  }
-
   _handleModelEvent(updateType, data) {
     switch (updateType) {
       // case UpdateType.PATCH:
@@ -157,38 +198,5 @@ export default class List {
         this._updateModal();
         break;
     }
-  }
-
-  _clearList({resetRenderedCardCount = false, resetSortType = false} = {}) {
-    const cardCount = this._getCards().length;
-
-    this._cardPresenter.forEach((presenter) => presenter.destroy());
-    this._cardPresenter.clear();
-
-    remove(this._loadMoreButtonComponent);
-
-    if (resetRenderedCardCount) {
-      this._renderedCardCount = this._list.cardsCountPerStep;
-    } else {
-      this._renderedCardCount = Math.min(cardCount, this._renderedCardCount);
-    }
-
-    if (resetSortType) {
-      this._currentSortType = SortType.DEFAULT;
-    }
-  }
-
-  _renderList() {
-    this._renderCardsList();
-  }
-
-  _renderSort() {
-    if (this._sortComponent !== null) {
-      this._sortComponent = null;
-    }
-
-    this._sortComponent = new SortView(this._currentSortType);
-    this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
-    render(this._listContainer, this._sortComponent, RenderPlace.AFTER_BEGIN);
   }
 }
