@@ -69,8 +69,9 @@ export default class List {
     this._cardPresenter.clear();
 
     remove(this._loadMoreButtonComponent);
-
-    remove(this._sortComponent);
+    if (this._list.isMain) {
+      remove(this._sortComponent);
+    }
 
     if (resetRenderedCardCount) {
       this._renderedCardCount = this._list.cardsCountPerStep;
@@ -165,7 +166,6 @@ export default class List {
   }
 
   _renderSort() {
-    console.log(2);
     if (this._sortComponent !== null) {
       this._sortComponent = null;
     }
