@@ -1,4 +1,3 @@
-import SortingView from '../view/sorting.js';
 import MainSectionView from '../view/main-section.js';
 import ListPresenter from './list.js';
 
@@ -33,10 +32,10 @@ const List = {
 };
 
 export default class Board {
-  constructor(container, cardsModel) {
+  constructor(container, cardsModel, filterModel) {
     this._container = container;
     this._cardsModel = cardsModel;
-    // this._sortingComponent = new SortingView();
+    this._filterModel = filterModel;
     this._mainSectionComponent = new MainSectionView();
     this._listPresenters = new Map();
 
@@ -44,7 +43,6 @@ export default class Board {
   }
 
   init () {
-    // render(this._container, this._sortingComponent);
     render(this._container, this._mainSectionComponent);
 
     this._renderLists(this._mainSectionComponent);
@@ -52,7 +50,7 @@ export default class Board {
 
   _renderLists(container) {
     for (const list of Object.values(List)) {
-      this._listPresenter = new ListPresenter(list, container, this._cardsModel, this._handleModalChange);
+      this._listPresenter = new ListPresenter(list, container, this._cardsModel, this._filterModel, this._handleModalChange);
       this._listPresenter.init();
       this._listPresenters.set(list.cardsSortingCriterion, this._listPresenter);
     }

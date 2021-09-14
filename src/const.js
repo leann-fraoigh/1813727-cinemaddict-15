@@ -19,4 +19,11 @@ const UpdateType = {
   MAJOR: 'MAJOR',
 };
 
-export {AGE_RATINGS, GENRES, EMOTICONS, SortType, UserAction, UpdateType};
+const FilterType = {
+  ALL: 'all',
+  WATCHLIST: 'watchlist',
+  HISTORY: 'history',
+  FAVORITES: 'favorites',
+};
+
+export {AGE_RATINGS, GENRES, EMOTICONS, SortType, UserAction, UpdateType, FilterType};

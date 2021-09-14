@@ -5,14 +5,16 @@ import CardPresenter from './card.js';
 import ModalPresenter from './modal.js';
 
 import {remove, render, RenderPlace} from '../utils/render';
+import {filter} from '../utils/filter.js';
 import {sortByRating, sortByDate, sortByComments} from '../utils/card.js';
 import {SortType, UserAction, UpdateType} from '../const.js';
 
 export default class List {
-  constructor(list, container, cardsModel, closeAllModals) {
+  constructor(list, container, cardsModel, filterModel, closeAllModals) {
     this._list = list;
     this._listContainer = container;
     this._cardsModel = cardsModel;
+    this._filterModel = filterModel;
     this._closeAllModals = closeAllModals;
     this._renderedCardCount = this._list.cardsCountPerStep;
     this._currentSortType = this._list.cardsSortingCriterion;
@@ -29,7 +31,9 @@ export default class List {
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+
     this._cardsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   init() {
@@ -46,13 +50,17 @@ export default class List {
   // Методы, касающиеся списка карточек
 
   _getCards() {
+    const filterType = this._filterModel.getFilter();
+    const cards = this._cardsModel.getCards();
+    const filtredCards = filter[filterType](cards);
+
     switch (this._currentSortType) {
       case SortType.RATING:
-        return this._cardsModel.getCards().slice().sort(sortByRating);
+        return filtredCards.sort(sortByRating);
       case SortType.DATE:
-        return this._cardsModel.getCards().slice().sort(sortByDate);
+        return filtredCards.sort(sortByDate);
       case SortType.COMMENTS:
-        return this._cardsModel.getCards().slice().sort(sortByComments);
+        return filtredCards.sort(sortByComments);
     }
 
     return this._cardsModel.getCards();
