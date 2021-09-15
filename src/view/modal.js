@@ -241,6 +241,7 @@ export default class Modal extends Smart {
     this.setWatchedClickHandler(this._callback.watchedClick);
     this.setFavoriteClickHandler(this._callback.favoriteClick);
     this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setDeleteCommentClickHandler(this._callback.deleteCommentClick);
     this.getElement().querySelector('form').addEventListener('submit', this._formSubmitHandler);
   }
 
@@ -291,7 +292,7 @@ export default class Modal extends Smart {
   static processDataToCard(data) {
     if (data.newComment) {
       data.comments.push({
-        id: '42', // Пока статика
+        id: 42, // Пока статика
         author: 'Jane Doe', // Тоже пока статика
         comment: data.newComment.newCommentText,
         date: Date.now(),
