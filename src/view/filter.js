@@ -40,8 +40,9 @@ export default class Filter extends AbstractView{
 
   _filterTypeChangeHandler(evt) {
     evt.preventDefault();
-    this._callback.filterTypeChange(evt.target.closest('a').dataset.filterType);
-    console.log(evt.target.closest('a').dataset.filterType);
+    if (evt.target.closest('a')) {
+      this._callback.filterTypeChange(evt.target.closest('a').dataset.filterType);
+    }
   }
 
   setFilterTypeChangeHandler(callback) {

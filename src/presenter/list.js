@@ -58,8 +58,7 @@ export default class List {
       case SortType.COMMENTS:
         return filtredCards.sort(sortByComments);
     }
-
-    return this._cardsModel.getCards();
+    return filtredCards;
   }
 
   _clearList({resetRenderedCardCount = false, resetSortType = false} = {}) {
