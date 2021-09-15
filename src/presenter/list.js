@@ -47,7 +47,7 @@ export default class List {
 
   _getCards() {
     const filterType = this._filterModel.getFilter();
-    const cards = this._cardsModel.getCards();
+    const cards = this._cardsModel.getCards().slice();
     const filtredCards = filter[filterType](cards);
 
     switch (this._currentSortType) {
@@ -58,7 +58,8 @@ export default class List {
       case SortType.COMMENTS:
         return filtredCards.sort(sortByComments);
     }
-    return filtredCards;
+    // return filtredCards;
+    return filter[filterType](this._cardsModel.getCards());
   }
 
   _clearList({resetRenderedCardCount = false, resetSortType = false} = {}) {
