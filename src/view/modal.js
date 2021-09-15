@@ -271,7 +271,7 @@ export default class Modal extends Smart {
   }
 
   _formSubmitHandler(evt) {
-    if (evt.key === 'Enter') {
+    if (evt.key === 'Enter' && this._data.newComment.newCommentText && this._data.newComment.newCommentEmoticon) {
       evt.preventDefault();
       this._callback.formSubmit(Modal.processDataToCard(this._data));
     }
@@ -290,15 +290,13 @@ export default class Modal extends Smart {
   }
 
   static processDataToCard(data) {
-    if (data.newComment) {
-      data.comments.push({
-        id: 42, // Пока статика
-        author: 'Jane Doe', // Тоже пока статика
-        comment: data.newComment.newCommentText,
-        date: Date.now(),
-        emoticon: data.newComment.newCommentEmoticon,
-      });
-    }
+    data.comments.push({
+      id: 42, // Пока статика
+      author: 'Jane Doe', // Тоже пока статика
+      comment: data.newComment.newCommentText,
+      date: Date.now(),
+      emoticon: data.newComment.newCommentEmoticon,
+    });
 
     delete data.newComment;
 
