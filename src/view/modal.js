@@ -140,7 +140,6 @@ const createModalTemplate = (data) => {
               <label class="film-details__emoji-label" for="emoji-angry">
                 <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
               </label>
-              <button type="submit">Временная кнопка сабмита</button>
             </div>
           </div>
         </section>
@@ -241,6 +240,7 @@ export default class Modal extends Smart {
     this.setListClickHandler(this._callback.listClick);
     this.setWatchedClickHandler(this._callback.watchedClick);
     this.setFavoriteClickHandler(this._callback.favoriteClick);
+    this.setFormSubmitHandler(this._callback.formSubmit);
     this.getElement().querySelector('form').addEventListener('submit', this._formSubmitHandler);
   }
 
@@ -270,13 +270,15 @@ export default class Modal extends Smart {
   }
 
   _formSubmitHandler(evt) {
-    evt.preventDefault();
-    this._callback.formSubmit(Modal.processDataToCard(this._data));
+    if (evt.key === 'Enter') {
+      evt.preventDefault();
+      this._callback.formSubmit(Modal.processDataToCard(this._data));
+    }
   }
 
   setFormSubmitHandler(callback) {
     this._callback.formSubmit = callback;
-    this.getElement().querySelector('form').addEventListener('submit', this._formSubmitHandler);
+    this.getElement().querySelector('textarea').addEventListener('keydown', this._formSubmitHandler);
   }
 
   static parseCardToData(card) {
