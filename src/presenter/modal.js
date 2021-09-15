@@ -16,6 +16,7 @@ export default class Modal {
     this._handleWatchedClick = this._handleWatchedClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._handleCloseBtnClick = this._handleCloseBtnClick.bind(this);
+    this._handleDeleteCommentClick = this._handleDeleteCommentClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
   }
 
@@ -29,6 +30,7 @@ export default class Modal {
     this._modalComponent.setListClickHandler(this._handleListClick);
     this._modalComponent.setWatchedClickHandler(this._handleWatchedClick);
     this._modalComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+    this._modalComponent.setDeleteCommentClickHandler(this._handleDeleteCommentClick);
     this._modalComponent.setFormSubmitHandler(this._handleFormSubmit);
   }
 
@@ -93,10 +95,25 @@ export default class Modal {
     );
   }
 
+  _handleDeleteCommentClick(id) {
+    const updatedComments = this._card.comments.filter((comment) => comment.id !== parseInt(id, 10));
+    this._changeData(
+      UserAction.UPDATE_CARD,
+      UpdateType.MAJOR,
+      Object.assign(
+        {},
+        this._card,
+        {
+          comments: updatedComments,
+        },
+      ),
+    );
+  }
+
   _handleFormSubmit(card) {
     this._changeData(
       UserAction.UPDATE_CARD,
-      UpdateType.MINOR,
+      UpdateType.MAJOR,
       card);
   }
 }

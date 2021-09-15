@@ -146,10 +146,12 @@ export default class List {
 
   _updateModal() {
     if (this._modalPresenter) {
+      const scrollPosition = this._modalPresenter._modalComponent.getScrollPosition();
       const index = this._cardsModel._cards.findIndex((card) => card.id === this._modalPresenter._card.id);
       const currentlyOpenMovie = this._cardsModel._cards[index];
       this.closeModal();
       this._openModal(currentlyOpenMovie);
+      this._modalPresenter._modalComponent.setScrollPosition(scrollPosition);
     }
   }
 

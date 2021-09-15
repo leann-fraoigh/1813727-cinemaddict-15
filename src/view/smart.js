@@ -24,6 +24,7 @@ export default class Smart extends Abstract {
   }
 
   updateElement() {
+    console.log('updaet');
     const scrollPosition = this.getScrollPosition();
     const prevElement = this.getElement();
 

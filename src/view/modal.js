@@ -158,6 +158,7 @@ export default class Modal extends Smart {
     this._listClickHandler = this._listClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+    this._deleteCommentClickHandler = this._deleteCommentClickHandler.bind(this);
     this._emojiChangeHandler = this._emojiChangeHandler.bind(this);
     this._commentInputHandler = this._commentInputHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
@@ -183,6 +184,13 @@ export default class Modal extends Smart {
   _favoriteClickHandler(evt) {
     evt.preventDefault();
     this._callback.favoriteClick();
+  }
+
+  _deleteCommentClickHandler(evt) {
+    if (evt.target.closest('.film-details__comment-delete')) {
+      evt.preventDefault();
+      this._callback.deleteCommentClick(evt.target.closest('.film-details__comment').dataset.commentId);
+    }
   }
 
   getTemplate() {
@@ -254,6 +262,11 @@ export default class Modal extends Smart {
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
     this.getElement().querySelector('.film-details__control-button--favorite').addEventListener('click', this._favoriteClickHandler);
+  }
+
+  setDeleteCommentClickHandler(callback) {
+    this._callback.deleteCommentClick = callback;
+    this.getElement().querySelector('.film-details__comments-list').addEventListener('click', this._deleteCommentClickHandler);
   }
 
   _formSubmitHandler(evt) {

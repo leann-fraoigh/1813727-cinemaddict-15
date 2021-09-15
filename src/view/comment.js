@@ -3,10 +3,10 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 
 const createCommentItemTemplate = (commentItem) => {
-  const {author, comment, date, emoticon} = commentItem;
+  const {author, comment, date, emoticon, id} = commentItem;
   const formattedDate = dayjs().diff(dayjs(date), 'day') < 2 ? dayjs(date).format('YYYY/MM/DD hh:mm') : dayjs(date).fromNow();
 
-  return  `<li class="film-details__comment">
+  return  `<li class="film-details__comment" data-comment-id="${id}">
         <span class="film-details__comment-emoji">
           <img src="./images/emoji/${emoticon}.png" width="55" height="55" alt="emoji-${emoticon}">
         </span>
