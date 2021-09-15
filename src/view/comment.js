@@ -1,4 +1,6 @@
 import dayjs from 'dayjs';
+import he from 'he'; // Не совсем понимаю, какой смысл использовать эту библиотеку на этапе вставки текста, а не раньше, при отправке на сервер. Плюс не ясно, почему она в итоге пропускет неизмененными небезопасные символы...
+
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 
@@ -11,7 +13,7 @@ const createCommentItemTemplate = (commentItem) => {
           <img src="./images/emoji/${emoticon}.png" width="55" height="55" alt="emoji-${emoticon}">
         </span>
         <div>
-          <p class="film-details__comment-text">${comment}</p>
+          <p class="film-details__comment-text">${he.encode(comment)}</p>
           <p class="film-details__comment-info">
             <span class="film-details__comment-author">${author}</span>
             <span class="film-details__comment-day">${formattedDate}</span>
