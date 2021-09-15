@@ -195,12 +195,12 @@ export default class List {
     }
   }
 
-  _handleModelEvent(updateType, data) {
+  _handleModelEvent(updateType) {
     switch (updateType) {
       // case UpdateType.PATCH:
-        // - обновить часть списка (например, когда поменялось описание)
-        // this._cardPresenter.get(data.id).init(data);
-        // break;
+      // - обновить часть списка (например, когда поменялось описание)
+      // this._cardPresenter.get(data.id).init(data);
+      // break;
       case UpdateType.MINOR:
         // - обновить списки (изменение статусов)
         break;
