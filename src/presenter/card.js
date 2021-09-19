@@ -1,23 +1,21 @@
-import ModalView from '../view/modal';
 import CardView from '../view/card.js';
 
-import {ScrollState, setScrollLockState} from '../utils/common.js';
 import {render, replace, remove} from '../utils/render';
+import {UserAction, UpdateType} from '../const.js';
 
 export default class Card {
-  constructor(cardContainer, changeData, changeModal) {
-    this._cardContainer = cardContainer;
+  constructor(list, changeData, openModal, linkModalToList) {
+    this._cardContainer = list;
     this._changeData = changeData;
     this._cardComponent = null;
     this._modalComponent = null;
-    this._changeModal = changeModal;
+    this._openModal = openModal;
+    this._linkModalToList = linkModalToList;
 
     this._handleMoreClick = this._handleMoreClick.bind(this);
     this._handleListClick = this._handleListClick.bind(this);
     this._handleWatchedClick = this._handleWatchedClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
-    this._handleCloseBtnClick = this._handleCloseBtnClick.bind(this);
-    this._handleFormSubmit = this._handleFormSubmit.bind(this);
   }
 
   init(card) {
@@ -39,38 +37,19 @@ export default class Card {
       replace(this._cardComponent, prevCardComponent);
     }
 
-    if (this._modalComponent) {
-      this._modalComponent.updateData(card);
-    }
+    // if (this._modalComponent) {
+    //   this._modalComponent.updateData(card);
+    // }
 
     remove(prevCardComponent);
   }
 
-  closeModal() {
-    if (this._modalComponent) {
-      remove(this._modalComponent);
-      setScrollLockState(ScrollState.off);
-      this._modalComponent = null;
-    }
-  }
-
-  _openModal() {
-    this._changeModal();
-    this._modalComponent = new ModalView(this._card);
-    const body = document.querySelector('body');
-
-    body.appendChild(this._modalComponent.getElement());
-    setScrollLockState(ScrollState.on);
-
-    this._modalComponent.setCloseBtnClickHandler(this._handleCloseBtnClick);
-    this._modalComponent.setListClickHandler(this._handleListClick);
-    this._modalComponent.setWatchedClickHandler(this._handleWatchedClick);
-    this._modalComponent.setFavoriteClickHandler(this._handleFavoriteClick);
-    this._modalComponent.setFormSubmitHandler(this._handleFormSubmit);
+  destroy() {
+    remove(this._cardComponent);
   }
 
   _handleMoreClick() {
-    this._openModal();
+    this._openModal(this._card);
   }
 
   _handleCloseBtnClick() {
@@ -79,6 +58,8 @@ export default class Card {
 
   _handleListClick() {
     this._changeData(
+      UserAction.UPDATE_CARD,
+      UpdateType.MAJOR,
       Object.assign(
         {},
         this._card,
@@ -94,6 +75,8 @@ export default class Card {
 
   _handleWatchedClick() {
     this._changeData(
+      UserAction.UPDATE_CARD,
+      UpdateType.MAJOR,
       Object.assign(
         {},
         this._card,
@@ -109,6 +92,8 @@ export default class Card {
 
   _handleFavoriteClick() {
     this._changeData(
+      UserAction.UPDATE_CARD,
+      UpdateType.MAJOR,
       Object.assign(
         {},
         this._card,
@@ -122,7 +107,4 @@ export default class Card {
     );
   }
 
-  _handleFormSubmit(card) {
-    this._changeData(card);
-  }
 }

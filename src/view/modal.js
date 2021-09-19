@@ -140,7 +140,6 @@ const createModalTemplate = (data) => {
               <label class="film-details__emoji-label" for="emoji-angry">
                 <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
               </label>
-              <button type="submit">Временная кнопка сабмита</button>
             </div>
           </div>
         </section>
@@ -158,6 +157,7 @@ export default class Modal extends Smart {
     this._listClickHandler = this._listClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+    this._deleteCommentClickHandler = this._deleteCommentClickHandler.bind(this);
     this._emojiChangeHandler = this._emojiChangeHandler.bind(this);
     this._commentInputHandler = this._commentInputHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
@@ -183,6 +183,13 @@ export default class Modal extends Smart {
   _favoriteClickHandler(evt) {
     evt.preventDefault();
     this._callback.favoriteClick();
+  }
+
+  _deleteCommentClickHandler(evt) {
+    if (evt.target.closest('.film-details__comment-delete')) {
+      evt.preventDefault();
+      this._callback.deleteCommentClick(evt.target.closest('.film-details__comment').dataset.commentId);
+    }
   }
 
   getTemplate() {
@@ -233,6 +240,8 @@ export default class Modal extends Smart {
     this.setListClickHandler(this._callback.listClick);
     this.setWatchedClickHandler(this._callback.watchedClick);
     this.setFavoriteClickHandler(this._callback.favoriteClick);
+    this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setDeleteCommentClickHandler(this._callback.deleteCommentClick);
     this.getElement().querySelector('form').addEventListener('submit', this._formSubmitHandler);
   }
 
@@ -256,14 +265,21 @@ export default class Modal extends Smart {
     this.getElement().querySelector('.film-details__control-button--favorite').addEventListener('click', this._favoriteClickHandler);
   }
 
+  setDeleteCommentClickHandler(callback) {
+    this._callback.deleteCommentClick = callback;
+    this.getElement().querySelector('.film-details__comments-list').addEventListener('click', this._deleteCommentClickHandler);
+  }
+
   _formSubmitHandler(evt) {
-    evt.preventDefault();
-    this._callback.formSubmit(Modal.processDataToCard(this._data));
+    if (evt.key === 'Enter' && this._data.newComment.newCommentText && this._data.newComment.newCommentEmoticon) {
+      evt.preventDefault();
+      this._callback.formSubmit(Modal.processDataToCard(this._data));
+    }
   }
 
   setFormSubmitHandler(callback) {
     this._callback.formSubmit = callback;
-    this.getElement().querySelector('form').addEventListener('submit', this._formSubmitHandler);
+    this.getElement().querySelector('textarea').addEventListener('keydown', this._formSubmitHandler);
   }
 
   static parseCardToData(card) {
@@ -274,15 +290,13 @@ export default class Modal extends Smart {
   }
 
   static processDataToCard(data) {
-    if (data.newComment) {
-      data.comments.push({
-        id: '42', // Пока статика
-        author: 'Jane Doe', // Тоже пока статика
-        comment: data.newComment.newCommentText,
-        date: Date.now(),
-        emoticon: data.newComment.newCommentEmoticon,
-      });
-    }
+    data.comments.push({
+      id: 42, // Пока статика
+      author: 'Jane Doe', // Тоже пока статика
+      comment: data.newComment.newCommentText,
+      date: Date.now(),
+      emoticon: data.newComment.newCommentEmoticon,
+    });
 
     delete data.newComment;
 
